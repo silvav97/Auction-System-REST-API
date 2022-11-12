@@ -2,6 +2,7 @@ package com.auction.security;
 
 import java.util.Date;
 
+import com.auction.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;

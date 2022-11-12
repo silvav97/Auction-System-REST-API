@@ -2,6 +2,9 @@ package com.auction.controller;
 
 import java.util.Collections;
 
+import com.auction.common.ApiResponse;
+import com.auction.exception.EmailAlreadyExistException;
+import com.auction.exception.UsernameAlreadyExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,12 +59,12 @@ public class AuthController {
 	}
 	
 	@PostMapping("/signup")
-	public ResponseEntity<?> signupUser(@RequestBody SignupDTO signupDTO) {
+	public ResponseEntity<ApiResponse> signupUser(@RequestBody SignupDTO signupDTO) {
 		if(userRepository.existsByUsername(signupDTO.getUsername())) {
-			return new ResponseEntity<>("That username already exists", HttpStatus.BAD_REQUEST);
+			throw new UsernameAlreadyExistException(signupDTO.getUsername());
 		}
 		if(userRepository.existsByEmail(signupDTO.getEmail())) {
-			return new ResponseEntity<>("That email already exists", HttpStatus.BAD_REQUEST);
+			throw new EmailAlreadyExistException(signupDTO.getEmail());
 		}
 		User user = new User();
 		user.setName(signupDTO.getName());
@@ -73,7 +76,7 @@ public class AuthController {
 		user.setRoles(Collections.singleton(role));
 		
 		userRepository.save(user);
-		return new ResponseEntity<>("User registerd successfully", HttpStatus.OK);
+		return new ResponseEntity<>(new ApiResponse(true, "User registered successfully"), HttpStatus.CREATED);
 	}
 	
 

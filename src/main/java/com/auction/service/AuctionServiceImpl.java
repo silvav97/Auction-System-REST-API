@@ -4,7 +4,9 @@ import com.auction.dto.AuctionDTO;
 import com.auction.dto.AuctionResponseDTO;
 import com.auction.entity.Auction;
 import com.auction.entity.User;
+import com.auction.exception.AuctionDoesNotBelongToUserException;
 import com.auction.exception.AuctionSystemException;
+import com.auction.exception.ResourceNotFoundException;
 import com.auction.repository.AuctionRepository;
 import com.auction.repository.UserRepository;
 import com.auction.security.JwtAuthenticationFilter;
@@ -34,41 +36,90 @@ public class AuctionServiceImpl implements AuctionService {
     public Auction createAuction(AuctionDTO auctionDTO, HttpServletRequest request) {
         User user = jwtAuthenticationFilter.getTheUserFromRequest(request);
         Auction auction = new Auction();
-        auction.setName(auctionDTO.getName());
+        auction.setProduct(auctionDTO.getProduct());
+        auction.setDescription(auctionDTO.getDescription());
+        auction.setInitialValue(auctionDTO.getInitialValue());
+        auction.setActive(true);
         auction.setUser(user);
         return auctionRepository.save(auction);
     }
 
     @Override
+    public Auction finishAuction(Long auctionId, HttpServletRequest request) {
+        User user = jwtAuthenticationFilter.getTheUserFromRequest(request);
+        Auction auction = auctionRepository.findById(auctionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Auction","AuctionId",String.valueOf(auctionId)));
+        if(!auction.getUser().equals(user)) {
+            throw new AuctionDoesNotBelongToUserException();
+        }
+        auction.setActive(false);
+        return auctionRepository.save(auction);
+    }
+
+    // Only Admin role users
+    @Override
     public List<AuctionResponseDTO> getAllAuctions(HttpServletRequest request) {
+        jwtAuthenticationFilter.getTheUserFromRequest(request);
         List<AuctionResponseDTO> listAuctions = new ArrayList<>();
         for(Auction auction :auctionRepository.findAll()){
-            AuctionResponseDTO auctionResponseDTO = new AuctionResponseDTO();
-            auctionResponseDTO.setId(auction.getId());
-            auctionResponseDTO.setName(auction.getName());
-            auctionResponseDTO.setOwner(auction.getUser().getName());
+            AuctionResponseDTO auctionResponseDTO = mapFromAuctionToAuctionResponseDTO(auction);
+            listAuctions.add(auctionResponseDTO);
+        }
+        return listAuctions;
+    }
+
+    // Only Admin role users
+    @Override
+    public List<AuctionResponseDTO> getAllAuctionsByUser(Long userId, HttpServletRequest request) {
+        jwtAuthenticationFilter.getTheUserFromRequest(request);
+        User user = userRepository.findById(userId)
+                //.orElseThrow(() -> new AuctionSystemException(HttpStatus.BAD_REQUEST,"User Not Found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User","UserId",String.valueOf(userId)));
+
+        List<AuctionResponseDTO> listAuctions = new ArrayList<>();
+        for(Auction auction : auctionRepository.findByUser(user)){
+            AuctionResponseDTO auctionResponseDTO = mapFromAuctionToAuctionResponseDTO(auction);
+            listAuctions.add(auctionResponseDTO);
+        }
+        return listAuctions;
+
+    }
+
+    @Override
+    public List<AuctionResponseDTO> getAllActiveAuctions(HttpServletRequest request) {
+        jwtAuthenticationFilter.getTheUserFromRequest(request);
+        List<AuctionResponseDTO> listAuctions = new ArrayList<>();
+        for(Auction auction : auctionRepository.findByActiveTrue()){
+            AuctionResponseDTO auctionResponseDTO = mapFromAuctionToAuctionResponseDTO(auction);
             listAuctions.add(auctionResponseDTO);
         }
         return listAuctions;
     }
 
     @Override
-    public List<AuctionResponseDTO> getAllAuctionsByUser(Long userId, HttpServletRequest request) {
-        //User user = jwtAuthenticationFilter.getTheUserFromRequest(request);
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new AuctionSystemException(HttpStatus.BAD_REQUEST,"User Not Found"));
-
-        List<Auction> auctions = auctionRepository.findByUser(user);
-
+    public List<AuctionResponseDTO> getAllMyAuctions(HttpServletRequest request) {
+        User user = jwtAuthenticationFilter.getTheUserFromRequest(request);
         List<AuctionResponseDTO> listAuctions = new ArrayList<>();
-        for(Auction auction : auctions){
-            AuctionResponseDTO auctionResponseDTO = new AuctionResponseDTO();
-            auctionResponseDTO.setId(auction.getId());
-            auctionResponseDTO.setName(auction.getName());
-            auctionResponseDTO.setOwner(auction.getUser().getName());
+        for(Auction auction : auctionRepository.findByUser(user)){
+            AuctionResponseDTO auctionResponseDTO = mapFromAuctionToAuctionResponseDTO(auction);
             listAuctions.add(auctionResponseDTO);
         }
         return listAuctions;
-
     }
+
+
+
+
+    private AuctionResponseDTO mapFromAuctionToAuctionResponseDTO(Auction auction) {
+        AuctionResponseDTO auctionResponseDTO = new AuctionResponseDTO();
+        auctionResponseDTO.setId(auction.getId());
+        auctionResponseDTO.setProduct(auction.getProduct());
+        auctionResponseDTO.setDescription(auction.getDescription());
+        auctionResponseDTO.setInitialValue(auction.getInitialValue());
+        auctionResponseDTO.setActive(auction.isActive());
+        auctionResponseDTO.setHighestBid(auction.getHighestBid());
+        auctionResponseDTO.setAuctioneer(auction.getUser().getName());
+        return auctionResponseDTO;
+    }
+
 }

@@ -3,8 +3,12 @@ package com.auction.dto;
 public class AuctionResponseDTO {
 
     private Long id;
-    private String name;
-    private String owner;
+    private String product;
+    private String description;
+    private Float initialValue;
+    private boolean active;
+    private Float highestBid;
+    private String auctioneer;
 
     public AuctionResponseDTO() {
     }
@@ -17,19 +21,51 @@ public class AuctionResponseDTO {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getProduct() {
+        return product;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProduct(String product) {
+        this.product = product;
     }
 
-    public String getOwner() {
-        return owner;
+    public String getDescription() {
+        return description;
     }
 
-    public void setOwner(String owner) {
-        this.owner = owner;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Float getInitialValue() {
+        return initialValue;
+    }
+
+    public void setInitialValue(Float initialValue) {
+        this.initialValue = initialValue;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public Float getHighestBid() {
+        return highestBid;
+    }
+
+    public void setHighestBid(Float highestBid) {
+        this.highestBid = highestBid;
+    }
+
+    public String getAuctioneer() {
+        return auctioneer;
+    }
+
+    public void setAuctioneer(String auctioneer) {
+        this.auctioneer = auctioneer;
     }
 }

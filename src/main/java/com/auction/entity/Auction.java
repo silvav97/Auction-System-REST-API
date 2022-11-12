@@ -2,6 +2,8 @@ package com.auction.entity;
 
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "auction")
@@ -11,11 +13,22 @@ public class Auction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String product;
+
+    private String description;
+
+    private Float initialValue;
+
+    private boolean active;
+
+    private Float highestBid;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "auctioneer_id")
     private User user;
+
+    //@OneToMany
+    //private Set<Bid> bids = new HashSet<>();
 
     public Auction() {
     }
@@ -28,12 +41,44 @@ public class Auction {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getProduct() {
+        return product;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProduct(String product) {
+        this.product = product;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Float getInitialValue() {
+        return initialValue;
+    }
+
+    public void setInitialValue(Float initialValue) {
+        this.initialValue = initialValue;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public Float getHighestBid() {
+        return highestBid;
+    }
+
+    public void setHighestBid(Float highestBid) {
+        this.highestBid = highestBid;
     }
 
     public User getUser() {
@@ -43,4 +88,13 @@ public class Auction {
     public void setUser(User user) {
         this.user = user;
     }
+
+    /*public Set<Bid> getBids() {
+        return bids;
+    }
+
+    public void setBids(Set<Bid> bids) {
+        this.bids = bids;
+    }*/
+
 }

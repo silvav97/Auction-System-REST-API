@@ -72,10 +72,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			// Get the User
 			username = jwtTokenProvider.getUsernameFromJWT(token);
 			user = userRepository.findByUsernameOrEmail(username, username)
-					.orElseThrow(() -> new ResourceNotFoundException("User", "username or Email", 1L));
+					.orElseThrow(() -> new ResourceNotFoundException("User","Username or Email","username"));
 			return user;
 		}
-		throw new AuctionSystemException(HttpStatus.INTERNAL_SERVER_ERROR, "Invalid token")  ;
+		throw new AuctionSystemException(HttpStatus.INTERNAL_SERVER_ERROR, "Invalid token");
 	}
 
 }

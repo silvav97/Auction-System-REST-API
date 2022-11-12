@@ -12,6 +12,7 @@ import java.util.List;
 public interface AuctionRepository extends JpaRepository<Auction, Long> {
 
     List<Auction> findByUser(User user);
+    List<Auction> findByActiveTrue();
 
 
 }

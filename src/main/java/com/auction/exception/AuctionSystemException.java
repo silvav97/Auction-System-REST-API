@@ -3,41 +3,41 @@ package com.auction.exception;
 import org.springframework.http.HttpStatus;
 
 
-public class AuctionSystemException extends RuntimeException {
+public class AuctionSystemException extends IllegalArgumentException {
 
 	private static final long serialVersionUID = 1L;
 
-	private HttpStatus estado;
-	private String mensaje;
+	private HttpStatus status;
+	private String message;
 
-	public AuctionSystemException(HttpStatus estado, String mensaje) {
+	public AuctionSystemException(HttpStatus status, String message) {
 		super();
-		this.estado = estado;
-		this.mensaje = mensaje;
+		this.status = status;
+		this.message = message;
 	}
 
-	public AuctionSystemException(HttpStatus estado, String mensaje, String mensaje1) {
+	public AuctionSystemException(HttpStatus status, String message, String message2) {
 		super();
-		this.estado = estado;
-		this.mensaje = mensaje;
-		this.mensaje = mensaje1;
+		this.status = status;
+		this.message = message;
+		this.message = message2;
 	}
 
-	public HttpStatus getEstado() {
-		return estado;
+	public HttpStatus getStatus() {
+		return status;
 	}
 
-	public void setEstado(HttpStatus estado) {
-		this.estado = estado;
+	public void setStatus(HttpStatus status) {
+		this.status = status;
 	}
 
-	public String getMensaje() {
-		return mensaje;
+	@Override
+	public String getMessage() {
+		return message;
 	}
 
-	public void setMensaje(String mensaje) {
-		this.mensaje = mensaje;
+	public void setMessage(String message) {
+		this.message = message;
 	}
-
 }
 

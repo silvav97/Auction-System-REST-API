@@ -16,14 +16,44 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
-	
+
+
+	@ExceptionHandler(AuctionSystemException.class)
+	public ResponseEntity<ErrorDetails> handleAuctionSystemException(AuctionSystemException exception, WebRequest webRequest) {
+		ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), webRequest.getDescription(false));
+		return new ResponseEntity<>(errorDetails, exception.getStatus());
+	}
+
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<ErrorDetails> handleResourceNotFoundException(ResourceNotFoundException exception, WebRequest webRequest) {
 		ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), webRequest.getDescription(false));
 		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
 	}
-	
-	
+
+	@ExceptionHandler(UsernameAlreadyExistException.class)
+	public ResponseEntity<ErrorDetails> handleUsernameAlreadyExistException(UsernameAlreadyExistException exception, WebRequest webRequest) {
+		ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), webRequest.getDescription(false));
+		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(EmailAlreadyExistException.class)
+	public ResponseEntity<ErrorDetails> handleEmailAlreadyExistException(EmailAlreadyExistException exception, WebRequest webRequest) {
+		ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), webRequest.getDescription(false));
+		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(AuctionDoesNotBelongToUserException.class)
+	public ResponseEntity<ErrorDetails> handleAuctionDoesNotBelongToUserException(AuctionDoesNotBelongToUserException exception, WebRequest webRequest) {
+		ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), webRequest.getDescription(false));
+		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+	}
+
+
+
+
+
+
+
 	
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorDetails> handleGlobalException(Exception exception, WebRequest webRequest) {
@@ -38,10 +68,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		ex.getBindingResult().getAllErrors().forEach((error) -> {
 			String fieldName = ((FieldError)error).getField();
 			String message = error.getDefaultMessage();
-			
 			errors.put(fieldName, message);
 		});
 		return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
 	}
-
 }

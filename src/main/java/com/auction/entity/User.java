@@ -32,9 +32,15 @@ public class User {
 
 	private String password;
 
+	private Float credit;
+
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private Set<Role> roles = new HashSet<>();
+
+	public User() {
+		super();
+	}
 
 	public Long getId() {
 		return id;
@@ -84,8 +90,11 @@ public class User {
 		this.roles = roles;
 	}
 
-	public User() {
-		super();
+	public Float getCredit() {
+		return credit;
 	}
 
+	public void setCredit(Float credit) {
+		this.credit = credit;
+	}
 }

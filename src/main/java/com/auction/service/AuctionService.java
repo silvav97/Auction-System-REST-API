@@ -9,9 +9,17 @@ import java.util.List;
 
 public interface AuctionService {
 
+    // Any Authenticated User
     Auction createAuction(AuctionDTO auctionDTO, HttpServletRequest request);
+    Auction finishAuction(Long auctionId, HttpServletRequest request);
 
+    // Only Admin
     List<AuctionResponseDTO> getAllAuctions(HttpServletRequest request);
-
     List<AuctionResponseDTO> getAllAuctionsByUser(Long userId, HttpServletRequest request);
+
+    // Any Authenticated User
+    List<AuctionResponseDTO> getAllActiveAuctions(HttpServletRequest request);
+    List<AuctionResponseDTO> getAllMyAuctions(HttpServletRequest request);
+
+
 }
