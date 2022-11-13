@@ -2,17 +2,17 @@ package com.auction.dto;
 
 public class BidDTO {
 
-    private Long bid;
+    private Float bid;
 
     public BidDTO() {
 
     }
 
-    public Long getBid() {
+    public Float getBid() {
         return bid;
     }
 
-    public void setBid(Long bid) {
+    public void setBid(Float bid) {
         this.bid = bid;
     }
 }

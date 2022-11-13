@@ -48,6 +48,36 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
 	}
 
+	@ExceptionHandler(BidOnOwnAuctionException.class)
+	public ResponseEntity<ErrorDetails> handleBidOnOwnAuctionException(BidOnOwnAuctionException exception, WebRequest webRequest) {
+		ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), webRequest.getDescription(false));
+		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(BidLessThanHighestBidException.class)
+	public ResponseEntity<ErrorDetails> handleBidLessThanHighestBidException(BidLessThanHighestBidException exception, WebRequest webRequest) {
+		ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), webRequest.getDescription(false));
+		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(InsufficientCreditToBidException.class)
+	public ResponseEntity<ErrorDetails> handleInsufficientCreditToBidException(InsufficientCreditToBidException exception, WebRequest webRequest) {
+		ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), webRequest.getDescription(false));
+		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(BidLessThanInitialValueException.class)
+	public ResponseEntity<ErrorDetails> handleBidLessThanInitialValueException(BidLessThanInitialValueException exception, WebRequest webRequest) {
+		ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), webRequest.getDescription(false));
+		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+	}
+
+
+
+
+
+
+
 
 
 

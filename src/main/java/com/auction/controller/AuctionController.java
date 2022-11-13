@@ -3,6 +3,7 @@ package com.auction.controller;
 import com.auction.common.ApiResponse;
 import com.auction.dto.AuctionDTO;
 import com.auction.dto.AuctionResponseDTO;
+import com.auction.dto.DepositMoneyDTO;
 import com.auction.entity.Auction;
 import com.auction.service.AuctionService;
 import org.springframework.beans.factory.annotation.Autowired;

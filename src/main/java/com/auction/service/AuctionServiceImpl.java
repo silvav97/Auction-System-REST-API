@@ -56,6 +56,8 @@ public class AuctionServiceImpl implements AuctionService {
         return auctionRepository.save(auction);
     }
 
+
+
     // Only Admin role users
     @Override
     public List<AuctionResponseDTO> getAllAuctions(HttpServletRequest request) {
@@ -73,7 +75,6 @@ public class AuctionServiceImpl implements AuctionService {
     public List<AuctionResponseDTO> getAllAuctionsByUser(Long userId, HttpServletRequest request) {
         jwtAuthenticationFilter.getTheUserFromRequest(request);
         User user = userRepository.findById(userId)
-                //.orElseThrow(() -> new AuctionSystemException(HttpStatus.BAD_REQUEST,"User Not Found"));
                 .orElseThrow(() -> new ResourceNotFoundException("User","UserId",String.valueOf(userId)));
 
         List<AuctionResponseDTO> listAuctions = new ArrayList<>();
