@@ -2,6 +2,7 @@ package com.auction.service;
 
 import com.auction.dto.AuctionDTO;
 import com.auction.dto.AuctionResponseDTO;
+import com.auction.dto.BidResponseDTO;
 import com.auction.entity.Auction;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,5 +22,6 @@ public interface AuctionService {
     List<AuctionResponseDTO> getAllActiveAuctions(HttpServletRequest request);
     List<AuctionResponseDTO> getAllMyAuctions(HttpServletRequest request);
 
-
+    // Only Admin
+    List<BidResponseDTO> getAllBidsFromAuction(Long auctionId, HttpServletRequest request);
 }

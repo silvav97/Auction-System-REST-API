@@ -2,12 +2,15 @@ package com.auction.service;
 
 import com.auction.dto.AuctionDTO;
 import com.auction.dto.AuctionResponseDTO;
+import com.auction.dto.BidResponseDTO;
 import com.auction.entity.Auction;
+import com.auction.entity.Bid;
 import com.auction.entity.User;
 import com.auction.exception.AuctionDoesNotBelongToUserException;
 import com.auction.exception.AuctionSystemException;
 import com.auction.exception.ResourceNotFoundException;
 import com.auction.repository.AuctionRepository;
+import com.auction.repository.BidRepository;
 import com.auction.repository.UserRepository;
 import com.auction.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +33,12 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private BidRepository bidRepository;
+
+    @Autowired
+    private BidServiceImpl bidService;
 
 
     @Override
@@ -108,7 +117,16 @@ public class AuctionServiceImpl implements AuctionService {
         return listAuctions;
     }
 
-
+    @Override
+    public List<BidResponseDTO> getAllBidsFromAuction(Long auctionId, HttpServletRequest request) {
+        jwtAuthenticationFilter.getTheUserFromRequest(request);
+        List<BidResponseDTO> listBids = new ArrayList<>();
+        for(Bid bid : bidRepository.findByAuctionId(auctionId)){
+            BidResponseDTO bidResponseDTO = bidService.mapFromBidToBidResponseDTO(bid);
+            listBids.add(bidResponseDTO);
+        }
+        return listBids;
+    }
 
 
     private AuctionResponseDTO mapFromAuctionToAuctionResponseDTO(Auction auction) {

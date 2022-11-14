@@ -7,8 +7,9 @@ public class AuctionResponseDTO {
     private String description;
     private Float initialValue;
     private boolean active;
-    private Float highestBid;
     private String auctioneer;
+    private Float highestBid;
+
 
     public AuctionResponseDTO() {
     }

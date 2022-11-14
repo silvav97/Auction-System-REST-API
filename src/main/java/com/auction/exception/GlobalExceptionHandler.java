@@ -54,8 +54,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
 	}
 
-	@ExceptionHandler(BidLessThanHighestBidException.class)
-	public ResponseEntity<ErrorDetails> handleBidLessThanHighestBidException(BidLessThanHighestBidException exception, WebRequest webRequest) {
+	@ExceptionHandler(BidLessThanOrEqualToHighestBidException.class)
+	public ResponseEntity<ErrorDetails> handleBidLessThanOrEqualToHighestBidException(BidLessThanOrEqualToHighestBidException exception, WebRequest webRequest) {
 		ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), webRequest.getDescription(false));
 		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
 	}

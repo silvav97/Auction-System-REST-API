@@ -12,16 +12,12 @@ public class Auction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String product;
-
     private String description;
-
     private Float initialValue;
-
     private boolean active;
-
     private Float highestBid;
+    private Long highestBidderId;
 
     @ManyToOne
     @JoinColumn(name = "auctioneer_id")
@@ -89,7 +85,15 @@ public class Auction {
         this.user = user;
     }
 
-    /*public Set<Bid> getBids() {
+    public Long getHighestBidderId() {
+        return highestBidderId;
+    }
+
+    public void setHighestBidderId(Long highestBidderId) {
+        this.highestBidderId = highestBidderId;
+    }
+
+/*public Set<Bid> getBids() {
         return bids;
     }
 

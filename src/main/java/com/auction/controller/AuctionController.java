@@ -3,6 +3,7 @@ package com.auction.controller;
 import com.auction.common.ApiResponse;
 import com.auction.dto.AuctionDTO;
 import com.auction.dto.AuctionResponseDTO;
+import com.auction.dto.BidResponseDTO;
 import com.auction.dto.DepositMoneyDTO;
 import com.auction.entity.Auction;
 import com.auction.service.AuctionService;
@@ -58,6 +59,14 @@ public class AuctionController {
     }
 
 
+
+
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/{auctionId}/bids")
+    public List<BidResponseDTO> getAllBidsFromAuction(@PathVariable("auctionId") Long auctionId, HttpServletRequest request) {
+        return auctionService.getAllBidsFromAuction(auctionId, request);
+    }
 
 
 
