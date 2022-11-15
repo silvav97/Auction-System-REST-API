@@ -24,6 +24,13 @@ public class Bid {
 
     }
 
+    public Bid(Long id, User user, Float bidAmount, Auction auction) {
+        this.id = id;
+        this.user = user;
+        this.bidAmount = bidAmount;
+        this.auction = auction;
+    }
+
     public Long getId() {
         return id;
     }

@@ -29,6 +29,17 @@ public class Auction {
     public Auction() {
     }
 
+    public Auction(Long id, String product, String description, Float initialValue, boolean active, Float highestBid, Long highestBidderId, User user) {
+        this.id = id;
+        this.product = product;
+        this.description = description;
+        this.initialValue = initialValue;
+        this.active = active;
+        this.highestBid = highestBid;
+        this.highestBidderId = highestBidderId;
+        this.user = user;
+    }
+
     public Long getId() {
         return id;
     }
@@ -93,12 +104,5 @@ public class Auction {
         this.highestBidderId = highestBidderId;
     }
 
-/*public Set<Bid> getBids() {
-        return bids;
-    }
-
-    public void setBids(Set<Bid> bids) {
-        this.bids = bids;
-    }*/
 
 }

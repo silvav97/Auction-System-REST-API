@@ -67,10 +67,14 @@ public class AuthController {
 			throw new EmailAlreadyExistException(signupDTO.getEmail());
 		}
 		User user = new User();
-		user.setName(signupDTO.getName());
-		user.setUsername(signupDTO.getUsername());
+		user.setAddress(signupDTO.getAddress());
+		user.setCellPhone(signupDTO.getCellPhone());
+		user.setCity(signupDTO.getCity());
+		user.setDocumentNumber(signupDTO.getDocumentNumber());
 		user.setEmail(signupDTO.getEmail());
+		user.setName(signupDTO.getName());
 		user.setPassword(passwordEncoder.encode(signupDTO.getPassword()));
+		user.setUsername(signupDTO.getUsername());
 		user.setCredit(0F);
 		
 		Role role = roleRepository.findByName("ROLE_USER").get();

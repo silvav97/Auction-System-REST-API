@@ -24,22 +24,37 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String name;
-
-	private String username;
-
+	private String address;
+	private String cellPhone;
+	private String city;
+	private String documentNumber;
 	private String email;
-
+	private String name;
 	private String password;
-
+	private String username;
 	private Float credit;
-
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private Set<Role> roles = new HashSet<>();
 
+
+
+
 	public User() {
-		super();
+	}
+
+	public User(Long id, String address, String cellPhone, String city, String documentNumber, String email, String name, String password, String username, Float credit, Set<Role> roles) {
+		this.id = id;
+		this.address = address;
+		this.cellPhone = cellPhone;
+		this.city = city;
+		this.documentNumber = documentNumber;
+		this.email = email;
+		this.name = name;
+		this.password = password;
+		this.username = username;
+		this.credit = credit;
+		this.roles = roles;
 	}
 
 	public Long getId() {
@@ -96,5 +111,37 @@ public class User {
 
 	public void setCredit(Float credit) {
 		this.credit = credit;
+	}
+
+	public String getDocumentNumber() {
+		return documentNumber;
+	}
+
+	public void setDocumentNumber(String documentNumber) {
+		this.documentNumber = documentNumber;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getCellPhone() {
+		return cellPhone;
+	}
+
+	public void setCellPhone(String cellPhone) {
+		this.cellPhone = cellPhone;
 	}
 }

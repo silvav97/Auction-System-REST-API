@@ -5,12 +5,14 @@ import com.auction.dto.AuctionResponseDTO;
 import com.auction.dto.BidResponseDTO;
 import com.auction.entity.Auction;
 import com.auction.entity.Bid;
+import com.auction.entity.Role;
 import com.auction.entity.User;
 import com.auction.exception.AuctionDoesNotBelongToUserException;
 import com.auction.exception.AuctionSystemException;
 import com.auction.exception.ResourceNotFoundException;
 import com.auction.repository.AuctionRepository;
 import com.auction.repository.BidRepository;
+import com.auction.repository.RoleRepository;
 import com.auction.repository.UserRepository;
 import com.auction.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,9 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Autowired
     private BidServiceImpl bidService;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
 
     @Override
@@ -119,7 +124,14 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public List<BidResponseDTO> getAllBidsFromAuction(Long auctionId, HttpServletRequest request) {
-        jwtAuthenticationFilter.getTheUserFromRequest(request);
+        User user = jwtAuthenticationFilter.getTheUserFromRequest(request);
+        Role role = roleRepository.findByName("ROLE_ADMIN").orElseThrow(() -> new ResourceNotFoundException("Role","Name","ROLE_ADMIN"));
+        Auction auction = auctionRepository.findById(auctionId).orElseThrow(() -> new ResourceNotFoundException("Auction","AuctionId",String.valueOf(auctionId)));
+
+        if(!(user.getRoles().contains(role) || auction.getUser().getUsername().equals(user.getUsername()))) {
+            //throw new AuctionDoesNotBelongToUserException();
+            throw new ResourceNotFoundException("I am: "+user.getUsername(),"The auction's owner is: "+auction.getUser().getUsername(),"mm");
+        }
         List<BidResponseDTO> listBids = new ArrayList<>();
         for(Bid bid : bidRepository.findByAuctionId(auctionId)){
             BidResponseDTO bidResponseDTO = bidService.mapFromBidToBidResponseDTO(bid);

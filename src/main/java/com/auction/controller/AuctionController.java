@@ -62,12 +62,17 @@ public class AuctionController {
 
 
 
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
+    //@GetMapping("/{auctionId}/bids")
+    //public List<BidResponseDTO> getAllBidsFromAuction(@PathVariable("auctionId") Long auctionId, HttpServletRequest request) {
+    //    return auctionService.getAllBidsFromAuction(auctionId, request);
+    //}
+
+    // get Bids from my acutions
     @GetMapping("/{auctionId}/bids")
-    public List<BidResponseDTO> getAllBidsFromAuction(@PathVariable("auctionId") Long auctionId, HttpServletRequest request) {
+    public List<BidResponseDTO> getAllBidsFromOneOfMyAuctions(@PathVariable("auctionId") Long auctionId, HttpServletRequest request) {
         return auctionService.getAllBidsFromAuction(auctionId, request);
     }
-
 
 
 }

@@ -22,6 +22,6 @@ public interface AuctionService {
     List<AuctionResponseDTO> getAllActiveAuctions(HttpServletRequest request);
     List<AuctionResponseDTO> getAllMyAuctions(HttpServletRequest request);
 
-    // Only Admin
+    // Only Admins or Auction's Owner
     List<BidResponseDTO> getAllBidsFromAuction(Long auctionId, HttpServletRequest request);
 }
