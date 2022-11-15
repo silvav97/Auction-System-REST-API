@@ -3,24 +3,19 @@ package com.auction.service;
 import com.auction.dto.AuctionDTO;
 import com.auction.dto.AuctionResponseDTO;
 import com.auction.dto.BidResponseDTO;
-import com.auction.entity.Auction;
-import com.auction.entity.Bid;
-import com.auction.entity.Role;
-import com.auction.entity.User;
+import com.auction.entity.*;
+import com.auction.exception.AuctionAlreadyEndedException;
 import com.auction.exception.AuctionDoesNotBelongToUserException;
-import com.auction.exception.AuctionSystemException;
 import com.auction.exception.ResourceNotFoundException;
-import com.auction.repository.AuctionRepository;
-import com.auction.repository.BidRepository;
-import com.auction.repository.RoleRepository;
-import com.auction.repository.UserRepository;
+import com.auction.exception.ThereWasNoWinnerException;
+import com.auction.repository.*;
 import com.auction.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +40,9 @@ public class AuctionServiceImpl implements AuctionService {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private WinnerBidRepository winnerBidRepository;
+
 
     @Override
     public Auction createAuction(AuctionDTO auctionDTO, HttpServletRequest request) {
@@ -58,18 +56,41 @@ public class AuctionServiceImpl implements AuctionService {
         return auctionRepository.save(auction);
     }
 
+
     @Override
-    public Auction finishAuction(Long auctionId, HttpServletRequest request) {
+    public WinnerBid endAuction(Long auctionId, HttpServletRequest request) {
         User user = jwtAuthenticationFilter.getTheUserFromRequest(request);
-        Auction auction = auctionRepository.findById(auctionId)
-                .orElseThrow(() -> new ResourceNotFoundException("Auction","AuctionId",String.valueOf(auctionId)));
+        Auction auction = auctionRepository.findById(auctionId).orElseThrow(() -> new ResourceNotFoundException("Auction","AuctionId",String.valueOf(auctionId)));
         if(!auction.getUser().equals(user)) {
             throw new AuctionDoesNotBelongToUserException();
         }
+        if(auction.isActive() == false) {
+            throw new AuctionAlreadyEndedException();
+        }
         auction.setActive(false);
-        return auctionRepository.save(auction);
+        auctionRepository.save(auction);
+
+        if(auction.getHighestBidderId() == null) {
+            throw new ThereWasNoWinnerException();
+        }
+
+        WinnerBid winnerBid = registerWinnerAndTransferMoneyFromWinnerToAuctioneer(auction);
+
+        return winnerBid;
     }
 
+    @Transactional
+    private WinnerBid registerWinnerAndTransferMoneyFromWinnerToAuctioneer(Auction auction) {
+        User winner = userRepository.findById(auction.getHighestBidderId())
+                .orElseThrow(() -> new ResourceNotFoundException("User","UserID",String.valueOf(auction.getHighestBidderId())));
+        User auctioneer = auction.getUser();
+        winner.setCredit(winner.getCredit() - auction.getHighestBid());   // Take money from bidder
+        auction.getUser().setCredit(auction.getUser().getCredit() + auction.getHighestBid());  // Deposite Money To Auctioneer
+
+        userRepository.saveAll(List.of(winner,auctioneer));
+        WinnerBid winnerBid = new WinnerBid(auction,winner);
+        return winnerBidRepository.save(winnerBid);
+    }
 
 
     // Only Admin role users
@@ -129,8 +150,7 @@ public class AuctionServiceImpl implements AuctionService {
         Auction auction = auctionRepository.findById(auctionId).orElseThrow(() -> new ResourceNotFoundException("Auction","AuctionId",String.valueOf(auctionId)));
 
         if(!(user.getRoles().contains(role) || auction.getUser().getUsername().equals(user.getUsername()))) {
-            //throw new AuctionDoesNotBelongToUserException();
-            throw new ResourceNotFoundException("I am: "+user.getUsername(),"The auction's owner is: "+auction.getUser().getUsername(),"mm");
+            throw new AuctionDoesNotBelongToUserException();
         }
         List<BidResponseDTO> listBids = new ArrayList<>();
         for(Bid bid : bidRepository.findByAuctionId(auctionId)){

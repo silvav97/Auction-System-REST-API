@@ -72,10 +72,23 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
 	}
 
+	@ExceptionHandler(AuctionIsNotActiveException.class)
+	public ResponseEntity<ErrorDetails> handleAuctionIsNotActiveException(AuctionIsNotActiveException exception, WebRequest webRequest) {
+		ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), webRequest.getDescription(false));
+		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+	}
 
+	@ExceptionHandler(ThereWasNoWinnerException.class)
+	public ResponseEntity<ErrorDetails> handleThereWasNoWinnerException(ThereWasNoWinnerException exception, WebRequest webRequest) {
+		ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), webRequest.getDescription(false));
+		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+	}
 
-
-
+	@ExceptionHandler(AuctionAlreadyEndedException.class)
+	public ResponseEntity<ErrorDetails> handleAuctionAlreadyEndedException(AuctionAlreadyEndedException exception, WebRequest webRequest) {
+		ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), webRequest.getDescription(false));
+		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+	}
 
 
 

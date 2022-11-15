@@ -6,10 +6,12 @@ import com.auction.dto.BidResponseDTO;
 import com.auction.entity.Auction;
 import com.auction.entity.Bid;
 import com.auction.entity.User;
+import com.auction.entity.WinnerBid;
 import com.auction.exception.*;
 import com.auction.repository.AuctionRepository;
 import com.auction.repository.BidRepository;
 import com.auction.repository.UserRepository;
+import com.auction.repository.WinnerBidRepository;
 import com.auction.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,12 +35,18 @@ public class BidServiceImpl implements BidService {
     @Autowired
     private UserRepository userRepository;
 
+
     @Override
     public Bid makeBid(Long auctionId, BidDTO bidDTO, HttpServletRequest request) {
         User user = jwtAuthenticationFilter.getTheUserFromRequest(request);
         Auction auction = auctionRepository.findById(auctionId).orElseThrow(() -> new ResourceNotFoundException("Auction","AuctionId",String.valueOf(auctionId)));
 
-        if(auction.getUser().equals(user)) { throw new BidOnOwnAuctionException();}
+        if(auction.getUser().equals(user)) {
+            throw new BidOnOwnAuctionException();
+        }
+        if(auction.isActive() == false) {
+            throw new AuctionIsNotActiveException();
+        }
         Bid bid = new Bid();
         bid.setAuction(auction);
         bid.setUser(user);
@@ -54,6 +62,7 @@ public class BidServiceImpl implements BidService {
 
         auction.setHighestBid(bid.getBidAmount());
         auction.setHighestBidderId(user.getId());
+
         return bidRepository.save(bid);
 
     }

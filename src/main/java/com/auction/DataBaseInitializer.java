@@ -1,13 +1,7 @@
 package com.auction;
 
-import com.auction.entity.Auction;
-import com.auction.entity.Bid;
-import com.auction.entity.Role;
-import com.auction.entity.User;
-import com.auction.repository.AuctionRepository;
-import com.auction.repository.BidRepository;
-import com.auction.repository.RoleRepository;
-import com.auction.repository.UserRepository;
+import com.auction.entity.*;
+import com.auction.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -36,6 +30,9 @@ public class DataBaseInitializer {
     @Autowired
     private BidRepository bidRepository;
 
+    @Autowired
+    private WinnerBidRepository winnerBidRepository;
+
 
     @Bean
     CommandLineRunner commandLineRunner() {
@@ -45,10 +42,10 @@ public class DataBaseInitializer {
             registerUsers();
             registerAuctions();
             registerBids();
+            registerWinnerBids();
 
         };
     }
-
 
 
     private void registerRoles() {
@@ -63,37 +60,70 @@ public class DataBaseInitializer {
 
         // ADMINS2
         //                   (id,   address,      cellPhone,  city,    documentNumber,  email,      name,           password,                   username, credit,  roles)
-        User admin1 = new User(1L,"adminAddress","123456789","adminCity","123456789","admin@gmail","admin",passwordEncoder.encode("adminPassword"),"admin",0F,Collections.singleton(roleAdmin));
-        User admin2 = new User(2L,"admin2Address","123456789","admin2City","123456789","admin2@gmail","admin2",passwordEncoder.encode("admin2Password"),"admin2",0F,Collections.singleton(roleAdmin));
+        User user1 = new User(1L,"adminAddress","123456789","adminCity","123456789","admin@gmail.com","admin",passwordEncoder.encode("adminPassword"),"admin",2000000F,Collections.singleton(roleAdmin));
+        User user2 = new User(2L,"admin2Address","123456789","admin2City","123456789","admin2@gmail.com","admin2",passwordEncoder.encode("admin2Password"),"admin2",2000000F,Collections.singleton(roleAdmin));
 
         // USERS
-        User user1 = new User(3L,"carlosAddress","123456789","carlosCity","123456789","carlos@gmail","carlos",passwordEncoder.encode("carlosPassword"),"carlos",0F,Collections.singleton(roleUser));
-        User user2 = new User(4L,"dianaAddress","123456789","dianaCity","123456789","diana@gmail","diana",passwordEncoder.encode("dianaPassword"),"diana",0F,Collections.singleton(roleUser));
-        User user3 = new User(5L,"sebasAddress","123456789","sebasCity","123456789","sebas@gmail","sebas",passwordEncoder.encode("sebasPassword"),"sebas",0F,Collections.singleton(roleUser));
-        User user4 = new User(6L,"jorgeAddress","123456789","jorgeCity","123456789","jorge@gmail","jorge",passwordEncoder.encode("jorgePassword"),"jorge",0F,Collections.singleton(roleUser));
-        User user5 = new User(7L,"juanAddress","123456789","juanCity","123456789","juan@gmail","juan",passwordEncoder.encode("juanPassword"),"juan",0F,Collections.singleton(roleUser));
-        User user6 = new User(8L,"luisAddress","123456789","luisCity","123456789","luis@gmail","luis",passwordEncoder.encode("luisPassword"),"luis",0F,Collections.singleton(roleUser));
-        User user7 = new User(9L,"lenaAddress","123456789","lenaCity","123456789","lena@gmail","lena",passwordEncoder.encode("lenaPassword"),"lena",0F,Collections.singleton(roleUser));
-        User user8 = new User(10L,"alexAddress","123456789","alexCity","123456789","alex@gmail","alex",passwordEncoder.encode("alexPassword"),"alex",0F,Collections.singleton(roleUser));
-        User user9 = new User(11L,"ivanAddress","123456789","ivanCity","123456789","ivan@gmail","ivan",passwordEncoder.encode("ivanPassword"),"ivan",0F,Collections.singleton(roleUser));
-        User user10 = new User(12L,"anaAddress","123456789","anaCity","123456789","ana@gmail","ana",passwordEncoder.encode("anaPassword"),"ana",0F,Collections.singleton(roleUser));
-        userRepository.saveAll(List.of(admin1,admin2,user1,user2,user3,user4,user5,user6,user7,user8,user9,user10));
+        User user3 = new User(3L,"carlosAddress","123456789","carlosCity","123456789","carlos@gmail.com","carlos",passwordEncoder.encode("carlosPassword"),"carlos",2000000F,Collections.singleton(roleUser));
+        User user4 = new User(4L,"dianaAddress","123456789","dianaCity","123456789","diana@gmail.com","diana",passwordEncoder.encode("dianaPassword"),"diana",2000000F,Collections.singleton(roleUser));
+        User user5 = new User(5L,"sebasAddress","123456789","sebasCity","123456789","sebas@gmail.com","sebas",passwordEncoder.encode("sebasPassword"),"sebas",2000000F,Collections.singleton(roleUser));
+        User user6 = new User(6L,"jorgeAddress","123456789","jorgeCity","123456789","jorge@gmail.com","jorge",passwordEncoder.encode("jorgePassword"),"jorge",2000000F,Collections.singleton(roleUser));
+        User user7 = new User(7L,"juanAddress","123456789","juanCity","123456789","juan@gmail.com","juan",passwordEncoder.encode("juanPassword"),"juan",2000000F,Collections.singleton(roleUser));
+        User user8 = new User(8L,"luisAddress","123456789","luisCity","123456789","luis@gmail.com","luis",passwordEncoder.encode("luisPassword"),"luis",2000000F,Collections.singleton(roleUser));
+        User user9 = new User(9L,"lenaAddress","123456789","lenaCity","123456789","lena@gmail.com","lena",passwordEncoder.encode("lenaPassword"),"lena",2000000F,Collections.singleton(roleUser));
+        User user10 = new User(10L,"alexAddress","123456789","alexCity","123456789","alex@gmail.com","alex",passwordEncoder.encode("alexPassword"),"alex",2000000F,Collections.singleton(roleUser));
+        User user11 = new User(11L,"ivanAddress","123456789","ivanCity","123456789","ivan@gmail.com","ivan",passwordEncoder.encode("ivanPassword"),"ivan",2000000F,Collections.singleton(roleUser));
+        User user12 = new User(12L,"anaAddress","123456789","anaCity","123456789","ana@gmail.com","ana",passwordEncoder.encode("anaPassword"),"ana",2000000F,Collections.singleton(roleUser));
+        userRepository.saveAll(List.of(user1,user2,user3,user4,user5,user6,user7,user8,user9,user10,user11,user12));
     }
 
     private void registerAuctions() {
-        //                            (id,  product,   description,  initVal, active, highBid, highBidderId,  user)
-        Auction auctionCarlos1 = new Auction(1L, "carro1", "description", 45000F,  true,  46000F,   4L,  userRepository.findById(3L).get());
-        Auction auctionCarlos2 = new Auction(2L, "carro2", "description", 49000F,  true,  null,   null,  userRepository.findById(3L).get());
-        Auction auctionCarlos3 = new Auction(3L, "carro3", "description", 26000F,  true,  null,   null,  userRepository.findById(3L).get());
-        Auction auctionDiana1 = new Auction(4L, "juguete1", "description", 5500F,  true,  null,   null,  userRepository.findById(4L).get());
-        Auction auctionDiana2 = new Auction(5L, "juguete2", "description", 2300F,  true,  null,   null,  userRepository.findById(4L).get());
-        Auction auctionDiana3 = new Auction(6L, "juguete3", "description", 13000F,  true,  null,   null,  userRepository.findById(4L).get());
-        Auction auctionSebas1 = new Auction(7L, "ps4", "new play station 4", 1250000F,true,null,   null,  userRepository.findById(5L).get());
-        auctionRepository.saveAll(List.of(auctionCarlos1,auctionCarlos2,auctionCarlos3,auctionDiana1,auctionDiana2,auctionDiana3,auctionSebas1));
+        //                                  (id,  product,  description, initVal,    active, highBid,highBidderId,  user)
+        Auction auctionCarlos1 = new Auction(1L, "carro1", "description", 45000F,      true,  60000F,   8L,  userRepository.findById(3L).get()); // has bids
+        Auction auctionCarlos2 = new Auction(2L, "carro2", "description", 45000F,      true,  60000F,   8L,  userRepository.findById(3L).get()); // has bids
+        Auction auctionCarlos3 = new Auction(3L, "carro3", "description", 26000F,      true,  null,   null,  userRepository.findById(3L).get());
+        Auction auctionDiana1 = new Auction(4L, "juguete1", "description", 5500F,      true,  41000F,   9L,  userRepository.findById(4L).get()); // has bids
+        Auction auctionDiana2 = new Auction(5L, "juguete2", "description", 2300F,      true,  null,   null,  userRepository.findById(4L).get());
+        Auction auctionDiana3 = new Auction(6L, "juguete3", "description", 13000F,     true,  null,   null,  userRepository.findById(4L).get());
+
+        Auction Sebas1 = new Auction(7L, "PS4",  "play station 4",    1250000F,  false, 1590000F,   3L,  userRepository.findById(5L).get());
+        Auction Sebas2 = new Auction(8L, "televisor", "new Plasma Tv", 980000F,  false, 1051000F,   3L,  userRepository.findById(5L).get());
+        Auction Sebas3 = new Auction(9L, "computer", "new Computer",   980000F,  false, 1051000F,   3L,  userRepository.findById(5L).get());
+        Auction Sebas4 = new Auction(10L, "tv", "new Extra Plasma Tv", 980000F,  false, 1051000F,   3L,  userRepository.findById(5L).get());
+        Auction Sebas5 = new Auction(11L, "tv", "new Extra Plasma Tv", 980000F,  false, 1051000F,   4L,  userRepository.findById(5L).get());
+        Auction Sebas6 = new Auction(12L, "tv", "new Extra Plasma Tv", 980000F,  false, 1051000F,   4L,  userRepository.findById(5L).get());
+        Auction Sebas7 = new Auction(13L, "tv", "new Extra Plasma Tv", 980000F,  false, 1051000F,   12L,  userRepository.findById(5L).get());
+        Auction Sebas8 = new Auction(14L, "tv", "new Extra Plasma Tv", 980000F,  false, 1051000F,   10L,  userRepository.findById(5L).get());
+        Auction Sebas9 = new Auction(15L, "tv", "new Extra Plasma Tv", 980000F,  false, 1051000F,   11L,  userRepository.findById(5L).get());
+        Auction Sebas10 = new Auction(16L, "tv", "new Extra Plasma Tv", 980000F, false, 1051000F,   12L,  userRepository.findById(5L).get());
+        Auction Sebas11 = new Auction(17L, "tv", "new Extra Plasma Tv", 980000F, true,  null,   null,  userRepository.findById(5L).get());
+        Auction Sebas12 = new Auction(18L, "tv", "new Extra Plasma Tv", 980000F, true,  null,   null,  userRepository.findById(5L).get());
+        Auction Sebas13 = new Auction(19L, "tv", "new Extra Plasma Tv", 980000F, true,  null,   null,  userRepository.findById(5L).get());
+        Auction Sebas14 = new Auction(20L, "tv", "new Extra Plasma Tv", 980000F, true,  null,   null,  userRepository.findById(5L).get());
+        Auction Sebas15 = new Auction(21L, "tv", "new Extra Plasma Tv", 980000F, true,  null,   null,  userRepository.findById(5L).get());
+        Auction Sebas16 = new Auction(22L, "tv", "new Extra Plasma Tv", 980000F, true,  null,   null,  userRepository.findById(5L).get());
+        Auction Sebas17 = new Auction(23L, "tv", "new Extra Plasma Tv", 980000F, true,  null,   null,  userRepository.findById(5L).get());
+        Auction Sebas18 = new Auction(24L, "tv", "new Extra Plasma Tv", 980000F, true,  null,   null,  userRepository.findById(5L).get());
+        Auction Sebas19 = new Auction(25L, "tv", "new Extra Plasma Tv", 980000F, true,  null,   null,  userRepository.findById(5L).get());
+        Auction Sebas20 = new Auction(26L, "tv", "new Extra Plasma Tv", 980000F, true,  null,   null,  userRepository.findById(5L).get());
+        Auction Sebas21 = new Auction(27L, "tv", "new Extra Plasma Tv", 980000F, true,  null,   null,  userRepository.findById(5L).get());
+        Auction Sebas22 = new Auction(28L, "tv", "new Extra Plasma Tv", 980000F, true,  null,   null,  userRepository.findById(5L).get());
+        Auction Sebas23 = new Auction(29L, "tv", "new Extra Plasma Tv", 980000F, true,  null,   null,  userRepository.findById(5L).get());
+        Auction Sebas24 = new Auction(30L, "tv", "new Extra Plasma Tv", 980000F, true,  null,   null,  userRepository.findById(5L).get());
+        Auction Sebas25 = new Auction(31L, "tv", "new Extra Plasma Tv", 980000F, true,  null,   null,  userRepository.findById(5L).get());
+        Auction Sebas26 = new Auction(32L, "tv", "new Extra Plasma Tv", 980000F, true,  null,   null,  userRepository.findById(5L).get());
+        Auction Sebas27 = new Auction(33L, "tv", "new Extra Plasma Tv", 980000F, true,  null,   null,  userRepository.findById(5L).get());
+        Auction Sebas28 = new Auction(34L, "tv", "new Extra Plasma Tv", 980000F, true,  null,   null,  userRepository.findById(5L).get());
+        Auction Sebas29 = new Auction(35L, "tv", "new Extra Plasma Tv", 980000F, true,  null,   null,  userRepository.findById(5L).get());
+        Auction Sebas30 = new Auction(36L, "tv", "new Extra Plasma Tv", 980000F, true,  null,   null,  userRepository.findById(5L).get());
+
+        auctionRepository.saveAll(List.of(auctionCarlos1,auctionCarlos2,auctionCarlos3,auctionDiana1,auctionDiana2,auctionDiana3,
+                Sebas1,Sebas2,Sebas3,Sebas4,Sebas5,Sebas6,Sebas7,Sebas8,Sebas9,Sebas10,Sebas11,Sebas12,Sebas13,Sebas14,Sebas15,
+                Sebas16,Sebas17,Sebas18,Sebas19,Sebas20,Sebas21,Sebas22,Sebas23,Sebas24,Sebas25,Sebas26,Sebas27,Sebas28,Sebas29,Sebas30));
     }
 
     private void registerBids() {
-        //              (id,   user,                            bidAmount,  auction)
+        //                 (id,   user,                            bidAmount,  auction)
         // BID FOR AUCTION 1 WHOSE AUCTIONEER IS CARLOS WITH USERID : 3
         Bid bid1 = new Bid(1L, userRepository.findById(4L).get(),  46000F,     auctionRepository.findById(1L).get());
         Bid bid2 = new Bid(2L, userRepository.findById(5L).get(),  47000F,     auctionRepository.findById(1L).get());
@@ -144,12 +174,57 @@ public class DataBaseInitializer {
         Bid bid43 = new Bid(43L, userRepository.findById(6L).get(),  18000F,     auctionRepository.findById(4L).get());
         Bid bid44 = new Bid(44L, userRepository.findById(7L).get(),  19000F,     auctionRepository.findById(4L).get());
         Bid bid45 = new Bid(45L, userRepository.findById(8L).get(),  20000F,     auctionRepository.findById(4L).get());
+        Bid bid46 = new Bid(46L, userRepository.findById(9L).get(),  25000F,     auctionRepository.findById(4L).get());
+        Bid bid47 = new Bid(47L, userRepository.findById(10L).get(),  35000F,     auctionRepository.findById(4L).get());
+        Bid bid48 = new Bid(48L, userRepository.findById(9L).get(),  40000F,     auctionRepository.findById(4L).get());
+        Bid bid49 = new Bid(49L, userRepository.findById(10L).get(),  35000F,     auctionRepository.findById(4L).get());
+        Bid bid50 = new Bid(50L, userRepository.findById(9L).get(),  41000F,     auctionRepository.findById(4L).get());
 
 
+        // BID FOR AUCTION 7 WHOSE AUCTIONEER IS SEBAS WITH USERID : 5    THIS AUCTION ARE NOT ACTIVE (THEY ALREADY HAD A WINNER)
+        Bid bid51 = new Bid(51L, userRepository.findById(3L).get(),  1500000F,     auctionRepository.findById(7L).get());
+        Bid bid52 = new Bid(52L, userRepository.findById(4L).get(),  1510000F,     auctionRepository.findById(7L).get());
+        Bid bid53 = new Bid(53L, userRepository.findById(6L).get(),  1520000F,     auctionRepository.findById(7L).get());
+        Bid bid54 = new Bid(54L, userRepository.findById(7L).get(),  1530000F,     auctionRepository.findById(7L).get());
+        Bid bid55 = new Bid(55L, userRepository.findById(8L).get(),  1540000F,     auctionRepository.findById(7L).get());
+        Bid bid56 = new Bid(56L, userRepository.findById(9L).get(),  1550000F,     auctionRepository.findById(7L).get());
+        Bid bid57 = new Bid(57L, userRepository.findById(10L).get(),  1560000F,     auctionRepository.findById(7L).get());
+        Bid bid58 = new Bid(58L, userRepository.findById(11L).get(),  1570000F,     auctionRepository.findById(7L).get());
+        Bid bid59 = new Bid(59L, userRepository.findById(12L).get(),  1580000F,     auctionRepository.findById(7L).get());
+        Bid bid60 = new Bid(60L, userRepository.findById(3L).get(),  1590000F,     auctionRepository.findById(7L).get());
 
-        bidRepository.saveAll(List.of(bid1,bid2,bid3,bid4,bid5,bid6,bid7,bid8,bid9,bid10,bid11,bid12,bid13,bid14,bid15,bid16,bid17,bid18,bid19,bid20,
-                                    bid21,bid22,bid23,bid24,bid25,bid26,bid27,bid28,bid29,bid30,bid31,bid32,bid33,bid34,bid35,bid36,bid37,bid38,bid39,bid40,
-                                    bid41,bid42,bid43,bid44,bid45));
+        // BID FOR AUCTION 8-16 WHOSE AUCTIONEER IS SEBAS WITH USERID : 5    THIS AUCTION ARE NOT ACTIVE (THEY ALREADY HAD A WINNER)
+        Bid bid61 = new Bid(61L, userRepository.findById(3L).get(),  1051000F,     auctionRepository.findById(8L).get());
+        Bid bid62 = new Bid(62L, userRepository.findById(3L).get(),  1051000F,     auctionRepository.findById(9L).get());
+        Bid bid63 = new Bid(63L, userRepository.findById(3L).get(),  1051000F,     auctionRepository.findById(10L).get());
+        Bid bid64 = new Bid(64L, userRepository.findById(4L).get(),  1051000F,     auctionRepository.findById(11L).get());
+        Bid bid65 = new Bid(65L, userRepository.findById(4L).get(),  1051000F,     auctionRepository.findById(12L).get());
+        Bid bid66 = new Bid(66L, userRepository.findById(12L).get(),  1051000F,     auctionRepository.findById(13L).get());
+        Bid bid67 = new Bid(67L, userRepository.findById(10L).get(),  1051000F,     auctionRepository.findById(14L).get());
+        Bid bid68 = new Bid(68L, userRepository.findById(11L).get(),  1051000F,     auctionRepository.findById(15L).get());
+        Bid bid69 = new Bid(69L, userRepository.findById(12L).get(),  1051000F,     auctionRepository.findById(16L).get());
+
+        bidRepository.saveAll(List.of(bid1, bid2, bid3, bid4, bid5, bid6, bid7, bid8, bid9, bid10,bid11,bid12,bid13,bid14,bid15,bid16,bid17,bid18,bid19,bid20,
+                                      bid21,bid22,bid23,bid24,bid25,bid26,bid27,bid28,bid29,bid30,bid31,bid32,bid33,bid34,bid35,bid36,bid37,bid38,bid39,bid40,
+                                      bid41,bid42,bid43,bid44,bid45,bid46,bid47,bid48,bid49,bid50,bid51,bid52,bid53,bid54,bid55,bid56,bid57,bid58,bid59,bid60,
+                                      bid61,bid62,bid63,bid64,bid65,bid66,bid67,bid68,bid69));
+    }
+
+    private void registerWinnerBids() {
+        //                                 (id,   auction,                            user )
+        WinnerBid winnerBid1 = new WinnerBid(1L, auctionRepository.findById(7L).get(), userRepository.findById(3L).get());
+        WinnerBid winnerBid2 = new WinnerBid(2L, auctionRepository.findById(8L).get(), userRepository.findById(3L).get());
+        WinnerBid winnerBid3 = new WinnerBid(3L, auctionRepository.findById(9L).get(), userRepository.findById(3L).get());
+        WinnerBid winnerBid4 = new WinnerBid(4L, auctionRepository.findById(10L).get(), userRepository.findById(3L).get());
+        WinnerBid winnerBid5 = new WinnerBid(5L, auctionRepository.findById(11L).get(), userRepository.findById(4L).get());
+        WinnerBid winnerBid6 = new WinnerBid(6L, auctionRepository.findById(12L).get(), userRepository.findById(4L).get());
+        WinnerBid winnerBid7 = new WinnerBid(7L, auctionRepository.findById(13L).get(), userRepository.findById(12L).get());
+        WinnerBid winnerBid8 = new WinnerBid(8L, auctionRepository.findById(14L).get(), userRepository.findById(10L).get());
+        WinnerBid winnerBid9 = new WinnerBid(9L, auctionRepository.findById(15L).get(), userRepository.findById(11L).get());
+        WinnerBid winnerBid10 = new WinnerBid(10L, auctionRepository.findById(16L).get(), userRepository.findById(12L).get());
+
+        winnerBidRepository.saveAll(List.of(winnerBid1,winnerBid2,winnerBid3,winnerBid4,winnerBid5,
+                                            winnerBid6,winnerBid7,winnerBid8,winnerBid9,winnerBid10));
     }
 
 

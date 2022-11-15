@@ -4,8 +4,6 @@ import com.auction.common.ApiResponse;
 import com.auction.dto.AuctionDTO;
 import com.auction.dto.AuctionResponseDTO;
 import com.auction.dto.BidResponseDTO;
-import com.auction.dto.DepositMoneyDTO;
-import com.auction.entity.Auction;
 import com.auction.service.AuctionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,9 +28,9 @@ public class AuctionController {
     }
 
     @PutMapping("/{auctionId}")
-    public ResponseEntity<ApiResponse> finishAuction(@PathVariable("auctionId") Long auctionId, HttpServletRequest request) {
-        auctionService.finishAuction(auctionId, request);
-        return new ResponseEntity<>(new ApiResponse(true, "Auction finished successfully"), HttpStatus.OK);
+    public ResponseEntity<ApiResponse> endAuction(@PathVariable("auctionId") Long auctionId, HttpServletRequest request) {
+        auctionService.endAuction(auctionId, request);
+        return new ResponseEntity<>(new ApiResponse(true, "Auction Ended successfully"), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ADMIN')")

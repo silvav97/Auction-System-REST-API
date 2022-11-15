@@ -4,6 +4,7 @@ import com.auction.dto.AuctionDTO;
 import com.auction.dto.AuctionResponseDTO;
 import com.auction.dto.BidResponseDTO;
 import com.auction.entity.Auction;
+import com.auction.entity.WinnerBid;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -12,7 +13,7 @@ public interface AuctionService {
 
     // Any Authenticated User
     Auction createAuction(AuctionDTO auctionDTO, HttpServletRequest request);
-    Auction finishAuction(Long auctionId, HttpServletRequest request);
+    WinnerBid endAuction(Long auctionId, HttpServletRequest request);
 
     // Only Admin
     List<AuctionResponseDTO> getAllAuctions(HttpServletRequest request);
