@@ -1,8 +1,6 @@
 package com.auction.service;
 
-import com.auction.dto.AuctionDTO;
-import com.auction.dto.AuctionResponseDTO;
-import com.auction.dto.BidResponseDTO;
+import com.auction.dto.*;
 import com.auction.entity.Auction;
 import com.auction.entity.WinnerBid;
 
@@ -17,12 +15,18 @@ public interface AuctionService {
 
     // Only Admin
     List<AuctionResponseDTO> getAllAuctions(HttpServletRequest request);
+    PaginatedAuctionResponseDTO getAllAuctionsWithPaginationAndSorting(Integer pageNumber, Integer pageSize, String sortBy, String sortDireccion, HttpServletRequest request);
     List<AuctionResponseDTO> getAllAuctionsByUser(Long userId, HttpServletRequest request);
+    PaginatedAuctionResponseDTO getAllAuctionsByUserWithPaginationAndSorting(Integer pageNumber, Integer pageSize, String sortBy, String sortDireccion, Long userId, HttpServletRequest request);
 
     // Any Authenticated User
     List<AuctionResponseDTO> getAllActiveAuctions(HttpServletRequest request);
+    PaginatedAuctionResponseDTO getAllActiveAuctionsWithPaginationAndSorting(Integer pageNumber, Integer pageSize, String sortBy, String sortDireccion, HttpServletRequest request);
     List<AuctionResponseDTO> getAllMyAuctions(HttpServletRequest request);
+    PaginatedAuctionResponseDTO getAllMyAuctionsWithPaginationAndSorting(Integer pageNumber, Integer pageSize, String sortBy, String sortDireccion, HttpServletRequest request);
+
 
     // Only Admins or Auction's Owner
     List<BidResponseDTO> getAllBidsFromAuction(Long auctionId, HttpServletRequest request);
+    PaginatedBidResponseDTO getAllBidsFromAuctionWithPaginationAndSorting(Integer pageNumber, Integer pageSize, String sortBy, String sortDireccion, Long auctionId, HttpServletRequest request);
 }

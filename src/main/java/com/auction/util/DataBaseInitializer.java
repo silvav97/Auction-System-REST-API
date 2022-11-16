@@ -1,4 +1,4 @@
-package com.auction;
+package com.auction.util;
 
 import com.auction.entity.*;
 import com.auction.repository.*;
