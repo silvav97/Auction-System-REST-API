@@ -10,8 +10,6 @@ import java.util.List;
 
 public interface BidService {
 
-    Bid makeBid(Long auctionId, BidDTO bidDTO, HttpServletRequest request);
-
     List<BidResponseDTO> getAllBids(HttpServletRequest request);
     PaginatedBidResponseDTO getAllBidsWithPaginationAndSorting(Integer pageNumber, Integer pageSize, String sortBy, String sortDireccion, HttpServletRequest request);
 
@@ -21,5 +19,7 @@ public interface BidService {
     List<BidResponseDTO> getAllMyBids(HttpServletRequest request);
     PaginatedBidResponseDTO getAllMyBidsWithPaginationAndSorting(Integer pageNumber, Integer pageSize, String sortBy, String sortDireccion, HttpServletRequest request);
 
+
+    Bid makeBid(Long auctionId, BidDTO bidDTO, HttpServletRequest request);
 
 }

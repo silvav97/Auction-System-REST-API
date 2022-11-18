@@ -2,31 +2,20 @@ package com.auction.service;
 
 import com.auction.dto.*;
 import com.auction.entity.*;
-import com.auction.exception.AuctionAlreadyEndedException;
-import com.auction.exception.AuctionDoesNotBelongToUserException;
-import com.auction.exception.ResourceNotFoundException;
-import com.auction.exception.ThereWasNoWinnerException;
+import com.auction.exception.*;
 import com.auction.repository.*;
 import com.auction.security.JwtAuthenticationFilter;
-import net.sf.jasperreports.engine.*;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.auction.util.MyMappers.*;
@@ -45,9 +34,6 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Autowired
     private BidRepository bidRepository;
-
-    @Autowired
-    private BidServiceImpl bidService;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -102,12 +88,10 @@ public class AuctionServiceImpl implements AuctionService {
     @Override
     public List<AuctionResponseDTO> getAllAuctions(HttpServletRequest request) {
         jwtAuthenticationFilter.getTheUserFromRequest(request);
-        List<AuctionResponseDTO> listAuctions = new ArrayList<>();
-        for(Auction auction :auctionRepository.findAll()){
-            AuctionResponseDTO auctionResponseDTO = mapFromAuctionToAuctionResponseDTO(auction);
-            listAuctions.add(auctionResponseDTO);
-        }
+        List<Auction> auctions = auctionRepository.findAll();
+        List<AuctionResponseDTO> listAuctions =  auctions.stream().map(auction -> mapFromAuctionToAuctionResponseDTO(auction)).collect(Collectors.toList());
         return listAuctions;
+
     }
 
     // Only Admin role users
@@ -125,11 +109,8 @@ public class AuctionServiceImpl implements AuctionService {
     public List<AuctionResponseDTO> getAllAuctionsByUser(Long userId, HttpServletRequest request) {
         jwtAuthenticationFilter.getTheUserFromRequest(request);
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User","UserId",String.valueOf(userId)));
-        List<AuctionResponseDTO> listAuctions = new ArrayList<>();
-        for(Auction auction : auctionRepository.findByUser(user)){
-            AuctionResponseDTO auctionResponseDTO = mapFromAuctionToAuctionResponseDTO(auction);
-            listAuctions.add(auctionResponseDTO);
-        }
+        List<Auction> auctions = auctionRepository.findByUser(user);
+        List<AuctionResponseDTO> listAuctions =  auctions.stream().map(auction -> mapFromAuctionToAuctionResponseDTO(auction)).collect(Collectors.toList());
         return listAuctions;
     }
 
@@ -147,11 +128,8 @@ public class AuctionServiceImpl implements AuctionService {
     @Override
     public List<AuctionResponseDTO> getAllActiveAuctions(HttpServletRequest request) {
         jwtAuthenticationFilter.getTheUserFromRequest(request);
-        List<AuctionResponseDTO> listAuctions = new ArrayList<>();
-        for(Auction auction : auctionRepository.findByActiveTrue()){
-            AuctionResponseDTO auctionResponseDTO = mapFromAuctionToAuctionResponseDTO(auction);
-            listAuctions.add(auctionResponseDTO);
-        }
+        List<Auction> auctions = auctionRepository.findByActiveTrue();
+        List<AuctionResponseDTO> listAuctions =  auctions.stream().map(auction -> mapFromAuctionToAuctionResponseDTO(auction)).collect(Collectors.toList());
         return listAuctions;
     }
 
@@ -167,11 +145,8 @@ public class AuctionServiceImpl implements AuctionService {
     @Override
     public List<AuctionResponseDTO> getAllMyAuctions(HttpServletRequest request) {
         User user = jwtAuthenticationFilter.getTheUserFromRequest(request);
-        List<AuctionResponseDTO> listAuctions = new ArrayList<>();
-        for(Auction auction : auctionRepository.findByUser(user)){
-            AuctionResponseDTO auctionResponseDTO = mapFromAuctionToAuctionResponseDTO(auction);
-            listAuctions.add(auctionResponseDTO);
-        }
+        List<Auction> auctions = auctionRepository.findByUser(user);
+        List<AuctionResponseDTO> listAuctions =  auctions.stream().map(auction -> mapFromAuctionToAuctionResponseDTO(auction)).collect(Collectors.toList());
         return listAuctions;
     }
 
@@ -194,11 +169,9 @@ public class AuctionServiceImpl implements AuctionService {
             throw new AuctionDoesNotBelongToUserException();
         }
 
-        List<BidResponseDTO> listBids = new ArrayList<>();
-        for(Bid bid : bidRepository.findByAuctionId(auctionId)){
-            BidResponseDTO bidResponseDTO = mapFromBidToBidResponseDTO(bid);
-            listBids.add(bidResponseDTO);
-        }
+
+        List<Bid> bids = bidRepository.findByAuctionId(auctionId);
+        List<BidResponseDTO> listBids =  bids.stream().map(bid -> mapFromBidToBidResponseDTO(bid)).collect(Collectors.toList());
         return listBids;
     }
 
@@ -214,83 +187,11 @@ public class AuctionServiceImpl implements AuctionService {
 
         Sort sort = sortDireccion.equalsIgnoreCase(Sort.Direction.ASC.name())?Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-        //Page<Bid> bids = bidRepository.findAllByUser(user,pageable);
         Page<Bid> bids = bidRepository.findAllByAuctionId(auctionId,pageable);
-
         return returnPaginatedBidResponseDTO(bids);
 
     }
 
-    @Override
-    public String exportAuctionsReport(String format,HttpServletRequest request) throws FileNotFoundException, JRException {
-        jwtAuthenticationFilter.getTheUserFromRequest(request);
-        List<PDFAuctionResponseDTO> listAuctions = new ArrayList<>();
-        for(Auction auction :auctionRepository.findAll()){
-            PDFAuctionResponseDTO pdfAuctionResponseDTO = mapFromAuctionToPDFAuctionResponseDTO(auction);
-            listAuctions.add(pdfAuctionResponseDTO);
-        }
-
-        String path = "C://Users//ASUS//Desktop//PROGRAMACION//JAVA//SpringBoot//";
-        File file = ResourceUtils.getFile("classpath:auction.jrxml");
-        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
-        JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(listAuctions);
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("gain java", "knowledge");
-        parameters.put("aditionalInformation", "hola");
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, ds);
-
-        if(format.equalsIgnoreCase("html")) {
-            JasperExportManager.exportReportToHtmlFile(jasperPrint, path + "Auctions.html");
-        }
-        if(format.equalsIgnoreCase("pdf")) {
-            JasperExportManager.exportReportToPdfFile(jasperPrint, path + "Auctions.pdf");
-        }
-        return "Path: " + path;
-    }
-
-    @Override
-    public String exportBidsReport(String format, Long auctionId, HttpServletRequest request) throws FileNotFoundException, JRException {
-        User user = jwtAuthenticationFilter.getTheUserFromRequest(request);
-        Role role = roleRepository.findByName("ROLE_ADMIN").orElseThrow(() -> new ResourceNotFoundException("Role","Name","ROLE_ADMIN"));
-        Auction auction = auctionRepository.findById(auctionId).orElseThrow(() -> new ResourceNotFoundException("Auction","AuctionId",String.valueOf(auctionId)));
-
-        if(!(user.getRoles().contains(role) || auction.getUser().getUsername().equals(user.getUsername()))) {
-            throw new AuctionDoesNotBelongToUserException();
-        }
-
-        List<PDFBidResponseDTO> listBids = new ArrayList<>();
-        for(Bid bid : bidRepository.findByAuctionId(auctionId)){
-            PDFBidResponseDTO pdfBidResponseDTO = mapFromBidToPDFBidResponseDTO(bid);
-            PDFBidResponseDTO.setAuctionId(auctionId);
-            PDFBidResponseDTO.setProduct(auction.getProduct());
-            PDFBidResponseDTO.setAuctioneerName(auction.getUser().getName());
-            PDFBidResponseDTO.setAuctioneerEmail(auction.getUser().getEmail());
-            listBids.add(pdfBidResponseDTO);
-        }
-
-
-
-        String path = "C://Users//ASUS//Desktop//PROGRAMACION//JAVA//SpringBoot//";
-        File file = ResourceUtils.getFile("classpath:bid.jrxml");
-        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
-        JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(listBids);
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("gain java", "knowledge");
-        parameters.put("aditionalInformation", "hola");
-        parameters.put("auctionId", PDFBidResponseDTO.getAuctionId());
-        parameters.put("auctioneerName", PDFBidResponseDTO.getAuctioneerName());
-        parameters.put("product", PDFBidResponseDTO.getProduct());
-        parameters.put("auctioneerEmail", PDFBidResponseDTO.getAuctioneerEmail());
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, ds);
-
-        if(format.equalsIgnoreCase("html")) {
-            JasperExportManager.exportReportToHtmlFile(jasperPrint, path +user.getUsername().toUpperCase()+"_AuctionID_#"+auctionId+"bids.html");
-        }
-        if(format.equalsIgnoreCase("pdf")) {
-            JasperExportManager.exportReportToPdfFile(jasperPrint, path + user.getUsername().toUpperCase()+"_AuctionID_"+auctionId+"bids.pdf");
-        }
-        return "Path: " + path;
-    }
 
 
 }

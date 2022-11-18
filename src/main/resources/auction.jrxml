@@ -36,7 +36,7 @@
                 <reportElement x="-20" y="20" width="595" height="1" forecolor="#666666" uuid="c1ed74c1-564e-40af-98b9-254a3bd9cba2"/>
             </line>
             <staticText>
-                <reportElement mode="Opaque" x="-20" y="-1" width="60" height="20" forecolor="#000000" backcolor="#E6E6E6" uuid="2ee279e2-381f-452f-8b64-5d45e6f1cd2d">
+                <reportElement mode="Opaque" x="-20" y="-1" width="70" height="20" forecolor="#000000" backcolor="#E6E6E6" uuid="2ee279e2-381f-452f-8b64-5d45e6f1cd2d">
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4276c61e-211e-4c54-9bee-402a543aa05c"/>
                 </reportElement>
                 <textElement textAlignment="Center">
@@ -45,7 +45,7 @@
                 <text><![CDATA[Id]]></text>
             </staticText>
             <staticText>
-                <reportElement mode="Opaque" x="40" y="-1" width="100" height="20" forecolor="#000000" backcolor="#E6E6E6" uuid="af67dbbe-969b-433d-b5c4-2ed89fadb504">
+                <reportElement mode="Opaque" x="50" y="-1" width="100" height="20" forecolor="#000000" backcolor="#E6E6E6" uuid="af67dbbe-969b-433d-b5c4-2ed89fadb504">
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0bc4c68f-708d-43b8-b54c-55b5e18b037a"/>
                 </reportElement>
                 <textElement textAlignment="Left">
@@ -54,7 +54,7 @@
                 <text><![CDATA[Product]]></text>
             </staticText>
             <staticText>
-                <reportElement mode="Opaque" x="140" y="-1" width="130" height="20" forecolor="#000000" backcolor="#E6E6E6" uuid="566947e1-9255-4733-a4e2-1f6da7feb62d">
+                <reportElement mode="Opaque" x="150" y="-1" width="120" height="20" forecolor="#000000" backcolor="#E6E6E6" uuid="566947e1-9255-4733-a4e2-1f6da7feb62d">
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="624f46c1-32ad-4e7e-bd0a-97ddc9ad5685"/>
                 </reportElement>
                 <textElement textAlignment="Left">
@@ -97,29 +97,29 @@
                 <reportElement positionType="FixRelativeToBottom" x="0" y="19" width="555" height="1" uuid="1ef7e7b3-a7a9-4879-b884-e75d3ecc08d8"/>
             </line>
             <textField>
-                <reportElement x="0" y="0" width="40" height="20" uuid="9ece8518-5553-4d41-b9b4-db0ed6d2ce8d">
+                <reportElement x="10" y="0" width="40" height="20" uuid="9ece8518-5553-4d41-b9b4-db0ed6d2ce8d">
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4276c61e-211e-4c54-9bee-402a543aa05c"/>
                 </reportElement>
                 <textElement textAlignment="Left">
-                    <font size="12"/>
+                    <font size="11"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="40" y="0" width="100" height="20" uuid="c8d35cc1-1cdd-43ef-9e90-39c50554a109">
+                <reportElement x="50" y="0" width="100" height="20" uuid="c8d35cc1-1cdd-43ef-9e90-39c50554a109">
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0bc4c68f-708d-43b8-b54c-55b5e18b037a"/>
                 </reportElement>
                 <textElement textAlignment="Left">
-                    <font size="12"/>
+                    <font size="11"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$F{product}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="140" y="0" width="130" height="20" uuid="d9464a7d-c0d6-472d-b803-dd867a7e0d6b">
+                <reportElement x="150" y="0" width="120" height="20" uuid="d9464a7d-c0d6-472d-b803-dd867a7e0d6b">
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="624f46c1-32ad-4e7e-bd0a-97ddc9ad5685"/>
                 </reportElement>
                 <textElement textAlignment="Left">
-                    <font size="12"/>
+                    <font size="11"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$F{auctioneerName}]]></textFieldExpression>
             </textField>
@@ -128,7 +128,7 @@
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f2a75920-fd82-4148-b233-5bd24f2ad9fc"/>
                 </reportElement>
                 <textElement textAlignment="Left">
-                    <font size="12"/>
+                    <font size="11"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$F{auctioneerEmail}]]></textFieldExpression>
             </textField>
@@ -137,7 +137,7 @@
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="35d923ac-0acf-4a14-893a-3eb590ab480f"/>
                 </reportElement>
                 <textElement textAlignment="Left">
-                    <font size="12"/>
+                    <font size="11"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$F{initialValue}]]></textFieldExpression>
             </textField>
@@ -146,7 +146,7 @@
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="35d923ac-0acf-4a14-893a-3eb590ab480f"/>
                 </reportElement>
                 <textElement textAlignment="Left">
-                    <font size="12"/>
+                    <font size="11"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$F{active}]]></textFieldExpression>
             </textField>
@@ -167,8 +167,8 @@
                 <textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
             </textField>
             <textField pattern="EEEEE dd MMMMM yyyy">
-                <reportElement x="0" y="4" width="100" height="13" uuid="2c5b30a3-ca20-49c5-b735-c9f059261a71"/>
-                <textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+                <reportElement x="0" y="4" width="250" height="13" uuid="2c5b30a3-ca20-49c5-b735-c9f059261a71"/>
+                <textFieldExpression><![CDATA[(new java.text.SimpleDateFormat("EEEEE dd MMMMM yyyy hh:mm aaa",new Locale("en", "EN"))).format(new Date())]]></textFieldExpression>
             </textField>
         </band>
     </pageFooter>

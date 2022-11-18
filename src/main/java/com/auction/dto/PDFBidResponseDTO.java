@@ -2,12 +2,6 @@ package com.auction.dto;
 
 public class PDFBidResponseDTO {
 
-
-    private static Long auctionId;
-    private static String product;
-    private static String auctioneerName;
-    private static String auctioneerEmail;
-
     private Long id;
     private String bidderName;
     private String bidderEmail;
@@ -22,38 +16,6 @@ public class PDFBidResponseDTO {
         this.bidderName = bidderName;
         this.bidderEmail = bidderEmail;
         this.bidAmount = bidAmount;
-    }
-
-    public static Long getAuctionId() {
-        return auctionId;
-    }
-
-    public static void setAuctionId(Long auctionId) {
-        PDFBidResponseDTO.auctionId = auctionId;
-    }
-
-    public static String getProduct() {
-        return product;
-    }
-
-    public static void setProduct(String product) {
-        PDFBidResponseDTO.product = product;
-    }
-
-    public static String getAuctioneerName() {
-        return auctioneerName;
-    }
-
-    public static void setAuctioneerName(String auctioneerName) {
-        PDFBidResponseDTO.auctioneerName = auctioneerName;
-    }
-
-    public static String getAuctioneerEmail() {
-        return auctioneerEmail;
-    }
-
-    public static void setAuctioneerEmail(String auctioneerEmail) {
-        PDFBidResponseDTO.auctioneerEmail = auctioneerEmail;
     }
 
     public Long getId() {
@@ -87,4 +49,5 @@ public class PDFBidResponseDTO {
     public void setBidAmount(Float bidAmount) {
         this.bidAmount = bidAmount;
     }
+
 }

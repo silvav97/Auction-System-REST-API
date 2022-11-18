@@ -3,10 +3,7 @@ package com.auction.service;
 import com.auction.dto.*;
 import com.auction.entity.Auction;
 import com.auction.entity.WinnerBid;
-import net.sf.jasperreports.engine.JRException;
-
 import javax.servlet.http.HttpServletRequest;
-import java.io.FileNotFoundException;
 import java.util.List;
 
 public interface AuctionService {
@@ -32,7 +29,5 @@ public interface AuctionService {
     List<BidResponseDTO> getAllBidsFromAuction(Long auctionId, HttpServletRequest request);
     PaginatedBidResponseDTO getAllBidsFromAuctionWithPaginationAndSorting(Integer pageNumber, Integer pageSize, String sortBy, String sortDireccion, Long auctionId, HttpServletRequest request);
 
-    // Reports with Jasper
-    String exportAuctionsReport(String format, HttpServletRequest request) throws FileNotFoundException, JRException;
-    String exportBidsReport(String format, Long auctionId, HttpServletRequest request) throws FileNotFoundException, JRException;
+
 }

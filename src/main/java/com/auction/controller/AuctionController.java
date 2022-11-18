@@ -4,7 +4,6 @@ import com.auction.common.ApiResponse;
 import com.auction.dto.*;
 import com.auction.service.AuctionService;
 import com.auction.util.AppConstants;
-import net.sf.jasperreports.engine.JRException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +11,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.FileNotFoundException;
 import java.util.List;
 
 @RestController
@@ -34,12 +32,14 @@ public class AuctionController {
         return new ResponseEntity<>(new ApiResponse(true, "Auction Ended successfully"), HttpStatus.OK);
     }
 
+    // Get All The Auctions
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public List<AuctionResponseDTO> getAllAuctions(HttpServletRequest request) {
         return auctionService.getAllAuctions(request);
     }
 
+    // Get All The Auctions With Pagination And Sorting
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/paginationandsorting")
     public PaginatedAuctionResponseDTO getAllAuctionsWithPaginationAndSorting(@RequestParam(value = "pageNumber", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) Integer pageNumber,
@@ -50,35 +50,14 @@ public class AuctionController {
         return auctionService.getAllAuctionsWithPaginationAndSorting(pageNumber, pageSize, sortBy, sortDireccion, request);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/export/{format}")
-    public String getAllAuctionsPDFReport(@PathVariable("format") String format, HttpServletRequest request) throws JRException, FileNotFoundException {
-        return auctionService.exportAuctionsReport(format, request);
-    }
-
-    // Get Bids From My Auctions
-    @GetMapping("/{auctionId}/bids/export/{format}")
-    public String getAllBidsFromOneOfMyAuctionsPDFReport(@PathVariable("format") String format, @PathVariable("auctionId") Long auctionId, HttpServletRequest request) throws JRException, FileNotFoundException {
-        return auctionService.exportBidsReport(format, auctionId, request);
-    }
-
-
-
-
-
-
-
-
-
-
-    // Get All The Auctions By User
+    // Get All The Auctions By UserId
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{userId}")
     public List<AuctionResponseDTO> getAllAuctionsByUser(@PathVariable("userId") Long userId, HttpServletRequest request) {
         return auctionService.getAllAuctionsByUser(userId, request);
     }
 
-    // Get All The Auctions By User With Pagination And Sorting
+    // Get All The Auctions By UserId With Pagination And Sorting
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/paginationandsorting/{userId}")
     public PaginatedAuctionResponseDTO getAllAuctionsByUserWithPaginationAndSorting(@RequestParam(value = "pageNumber", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) Integer pageNumber,
@@ -114,21 +93,21 @@ public class AuctionController {
     // Get All My Auctions With Pagination And Sorting
     @GetMapping("/paginationandsorting/mine")
     public PaginatedAuctionResponseDTO getAllMyAuctionsWithPaginationAndSorting(@RequestParam(value = "pageNumber", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) Integer pageNumber,
-                                                                                    @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) Integer pageSize,
-                                                                                    @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
-                                                                                    @RequestParam(value = "sortDireccion", defaultValue = AppConstants.DEFAULT_SORT_DIRECCION, required = false) String sortDireccion,
-                                                                                    HttpServletRequest request) {
+                                                                                @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) Integer pageSize,
+                                                                                @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+                                                                                @RequestParam(value = "sortDireccion", defaultValue = AppConstants.DEFAULT_SORT_DIRECCION, required = false) String sortDireccion,
+                                                                                HttpServletRequest request) {
         return auctionService.getAllMyAuctionsWithPaginationAndSorting(pageNumber, pageSize, sortBy, sortDireccion, request);
     }
 
 
-    // Get Bids From My Auctions
+    // Get Bids From One of My Auctions
     @GetMapping("/{auctionId}/bids")
     public List<BidResponseDTO> getAllBidsFromOneOfMyAuctions(@PathVariable("auctionId") Long auctionId, HttpServletRequest request) {
         return auctionService.getAllBidsFromAuction(auctionId, request);
     }
 
-    // Get Bids From My Auctions With Pagination And Sorting
+    // Get Bids From One of My Auctions With Pagination And Sorting
     @GetMapping("/paginationandsorting/{auctionId}/bids")
     public PaginatedBidResponseDTO getAllBidsFromOneOfMyAuctionsWithPaginationAndSorting(@RequestParam(value = "pageNumber", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) Integer pageNumber,
                                                                                          @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) Integer pageSize,
