@@ -8,19 +8,25 @@ import com.auction.exception.ResourceNotFoundException;
 import com.auction.exception.ThereWasNoWinnerException;
 import com.auction.repository.*;
 import com.auction.security.JwtAuthenticationFilter;
-import com.auction.util.MyMappers;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.auction.util.MyMappers.*;
@@ -215,11 +221,76 @@ public class AuctionServiceImpl implements AuctionService {
 
     }
 
+    @Override
+    public String exportAuctionsReport(String format,HttpServletRequest request) throws FileNotFoundException, JRException {
+        jwtAuthenticationFilter.getTheUserFromRequest(request);
+        List<PDFAuctionResponseDTO> listAuctions = new ArrayList<>();
+        for(Auction auction :auctionRepository.findAll()){
+            PDFAuctionResponseDTO pdfAuctionResponseDTO = mapFromAuctionToPDFAuctionResponseDTO(auction);
+            listAuctions.add(pdfAuctionResponseDTO);
+        }
+
+        String path = "C://Users//ASUS//Desktop//PROGRAMACION//JAVA//SpringBoot//";
+        File file = ResourceUtils.getFile("classpath:auction.jrxml");
+        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+        JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(listAuctions);
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("gain java", "knowledge");
+        parameters.put("aditionalInformation", "hola");
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, ds);
+
+        if(format.equalsIgnoreCase("html")) {
+            JasperExportManager.exportReportToHtmlFile(jasperPrint, path + "Auctions.html");
+        }
+        if(format.equalsIgnoreCase("pdf")) {
+            JasperExportManager.exportReportToPdfFile(jasperPrint, path + "Auctions.pdf");
+        }
+        return "Path: " + path;
+    }
+
+    @Override
+    public String exportBidsReport(String format, Long auctionId, HttpServletRequest request) throws FileNotFoundException, JRException {
+        User user = jwtAuthenticationFilter.getTheUserFromRequest(request);
+        Role role = roleRepository.findByName("ROLE_ADMIN").orElseThrow(() -> new ResourceNotFoundException("Role","Name","ROLE_ADMIN"));
+        Auction auction = auctionRepository.findById(auctionId).orElseThrow(() -> new ResourceNotFoundException("Auction","AuctionId",String.valueOf(auctionId)));
+
+        if(!(user.getRoles().contains(role) || auction.getUser().getUsername().equals(user.getUsername()))) {
+            throw new AuctionDoesNotBelongToUserException();
+        }
+
+        List<PDFBidResponseDTO> listBids = new ArrayList<>();
+        for(Bid bid : bidRepository.findByAuctionId(auctionId)){
+            PDFBidResponseDTO pdfBidResponseDTO = mapFromBidToPDFBidResponseDTO(bid);
+            PDFBidResponseDTO.setAuctionId(auctionId);
+            PDFBidResponseDTO.setProduct(auction.getProduct());
+            PDFBidResponseDTO.setAuctioneerName(auction.getUser().getName());
+            PDFBidResponseDTO.setAuctioneerEmail(auction.getUser().getEmail());
+            listBids.add(pdfBidResponseDTO);
+        }
 
 
 
+        String path = "C://Users//ASUS//Desktop//PROGRAMACION//JAVA//SpringBoot//";
+        File file = ResourceUtils.getFile("classpath:bid.jrxml");
+        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+        JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(listBids);
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("gain java", "knowledge");
+        parameters.put("aditionalInformation", "hola");
+        parameters.put("auctionId", PDFBidResponseDTO.getAuctionId());
+        parameters.put("auctioneerName", PDFBidResponseDTO.getAuctioneerName());
+        parameters.put("product", PDFBidResponseDTO.getProduct());
+        parameters.put("auctioneerEmail", PDFBidResponseDTO.getAuctioneerEmail());
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, ds);
 
-
+        if(format.equalsIgnoreCase("html")) {
+            JasperExportManager.exportReportToHtmlFile(jasperPrint, path +user.getUsername().toUpperCase()+"_AuctionID_#"+auctionId+"bids.html");
+        }
+        if(format.equalsIgnoreCase("pdf")) {
+            JasperExportManager.exportReportToPdfFile(jasperPrint, path + user.getUsername().toUpperCase()+"_AuctionID_"+auctionId+"bids.pdf");
+        }
+        return "Path: " + path;
+    }
 
 
 }

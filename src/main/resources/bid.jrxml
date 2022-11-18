@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Users" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="02d83c48-8b79-4205-b8e7-a0c1ad123643">
+    <parameter name="auctionId" class="java.lang.Long">
+        <defaultValueExpression><![CDATA[$P{auctionId}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="auctioneerName" class="java.lang.String">
+        <defaultValueExpression><![CDATA[$P{auctioneerName}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="product" class="java.lang.String">
+        <defaultValueExpression><![CDATA[$P{product}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="auctioneerEmail" class="java.lang.String">
+        <defaultValueExpression><![CDATA[$P{auctioneerEmail}]]></defaultValueExpression>
+    </parameter>
+    <field name="id" class="java.lang.Long"/>
+    <field name="bidderName" class="java.lang.String"/>
+    <field name="bidderEmail" class="java.lang.String"/>
+    <field name="bidAmount" class="java.lang.Float"/>
+    <background>
+        <band/>
+    </background>
+    <title>
+        <band height="85">
+            <frame>
+                <reportElement mode="Opaque" x="-20" y="-30" width="595" height="115" backcolor="#000000" uuid="1487d413-45f0-491c-9b89-9da3385099f9"/>
+                <staticText>
+                    <reportElement x="180" y="17" width="241" height="37" forecolor="#FFFFFF" uuid="e85f22f4-529c-4f60-a8c3-d9e2f9da8f92"/>
+                    <textElement textAlignment="Center">
+                        <font size="24" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[BID LIST]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="12" y="68" width="78" height="19" forecolor="#FFFFFF" backcolor="#030000" uuid="60031d2b-c873-41b2-9288-9e293c66ea83"/>
+                    <textElement textAlignment="Center">
+                        <font size="13" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Auction Id: ]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="114" y="68" width="136" height="18" forecolor="#FFFFFF" backcolor="#030000" uuid="1cb8c68e-64b8-4c86-9169-f40e23f776a1"/>
+                    <textElement textAlignment="Center">
+                        <font size="13" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Auctioneer Name: ]]></text>
+                </staticText>
+                <textField>
+                    <reportElement x="12" y="92" width="81" height="18" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="6730f16f-11c1-42f7-b7f6-11966ea85e21"/>
+                    <textElement textAlignment="Center">
+                        <font size="12"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$P{auctionId}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="117" y="92" width="133" height="18" forecolor="#FFFFFF" uuid="1ee0b746-4890-427c-9b61-992e0c110c32"/>
+                    <textElement textAlignment="Center">
+                        <font size="12"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$P{auctioneerName}]]></textFieldExpression>
+                </textField>
+                <staticText>
+                    <reportElement x="280" y="68" width="102" height="18" forecolor="#FFFFFF" uuid="3656021a-0e38-4393-8f46-4699c9a81197"/>
+                    <textElement textAlignment="Center">
+                        <font size="13" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Product: ]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="420" y="68" width="130" height="18" forecolor="#FFFFFF" uuid="d33decf8-5ca1-4c55-9a33-9368539afd22"/>
+                    <textElement textAlignment="Left">
+                        <font size="13" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Auctioneer Email: ]]></text>
+                </staticText>
+                <textField>
+                    <reportElement x="280" y="92" width="102" height="18" forecolor="#FFFFFF" uuid="687cef8c-c67c-4c7e-863c-67e9b5240b81"/>
+                    <textElement textAlignment="Center">
+                        <font size="12"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$P{product}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="421" y="92" width="144" height="18" forecolor="#FFFFFF" uuid="b9837a8d-089a-4bb2-a201-ad67c094d868"/>
+                    <textElement>
+                        <font size="12"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$P{auctioneerEmail}]]></textFieldExpression>
+                </textField>
+                <line>
+                    <reportElement x="270" y="61" width="1" height="56" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="3f5feec7-c200-481c-a5e9-8e1234141ab1"/>
+                </line>
+                <line>
+                    <reportElement x="400" y="61" width="1" height="56" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="605cfe5d-9f92-499c-8226-df50257eddf1"/>
+                </line>
+                <line>
+                    <reportElement x="105" y="61" width="1" height="56" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="8bc0cf4e-0c85-4556-9383-8fd910b72f1e"/>
+                </line>
+            </frame>
+        </band>
+    </title>
+    <pageHeader>
+        <band height="13"/>
+    </pageHeader>
+    <columnHeader>
+        <band height="26">
+            <line>
+                <reportElement x="-20" y="20" width="595" height="1" forecolor="#666666" uuid="c1ed74c1-564e-40af-98b9-254a3bd9cba2"/>
+            </line>
+            <staticText>
+                <reportElement mode="Opaque" x="60" y="-2" width="93" height="20" forecolor="#000000" backcolor="#E6E6E6" uuid="9a944b9b-1019-47f1-bfcc-4356741190bc">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4276c61e-211e-4c54-9bee-402a543aa05c"/>
+                </reportElement>
+                <textElement textAlignment="Center">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Id]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="153" y="-2" width="100" height="20" forecolor="#000000" backcolor="#E6E6E6" uuid="ba71e1a9-1a4b-4ca8-8093-2b811218d5af">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0bc4c68f-708d-43b8-b54c-55b5e18b037a"/>
+                </reportElement>
+                <textElement textAlignment="Left">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Bidder Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="253" y="-2" width="130" height="20" forecolor="#000000" backcolor="#E6E6E6" uuid="db481c21-02b1-4d8f-9b4c-60270a25ab44">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="624f46c1-32ad-4e7e-bd0a-97ddc9ad5685"/>
+                </reportElement>
+                <textElement textAlignment="Left">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Bidder Email]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="383" y="-2" width="107" height="20" forecolor="#000000" backcolor="#E6E6E6" uuid="4b58ebe6-e1dc-47e5-9b41-5f40e46a718d">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f2a75920-fd82-4148-b233-5bd24f2ad9fc"/>
+                </reportElement>
+                <textElement textAlignment="Left">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Bid Amount]]></text>
+            </staticText>
+            <line>
+                <reportElement x="-20" y="-69" width="595" height="1" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="4d076e09-bb50-4509-9b8b-294a394a87d6"/>
+            </line>
+            <staticText>
+                <reportElement mode="Opaque" x="-20" y="-2" width="80" height="20" forecolor="#000000" backcolor="#E6E6E6" uuid="81135a78-6a49-493e-8103-a2ebc234a3ca">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4276c61e-211e-4c54-9bee-402a543aa05c"/>
+                </reportElement>
+                <textElement textAlignment="Center">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="490" y="-2" width="85" height="20" forecolor="#000000" backcolor="#E6E6E6" uuid="3b6cc831-ac12-4f33-8ac4-2d436f6fafe4">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4276c61e-211e-4c54-9bee-402a543aa05c"/>
+                </reportElement>
+                <textElement textAlignment="Center">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+    <detail>
+        <band height="25">
+            <line>
+                <reportElement positionType="FixRelativeToBottom" x="0" y="19" width="555" height="1" uuid="1ef7e7b3-a7a9-4879-b884-e75d3ecc08d8"/>
+            </line>
+            <textField>
+                <reportElement x="103" y="0" width="50" height="20" uuid="89166433-bff9-4348-b606-bb426b679f91">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4276c61e-211e-4c54-9bee-402a543aa05c"/>
+                </reportElement>
+                <textElement textAlignment="Left">
+                    <font size="12"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="153" y="0" width="100" height="20" uuid="71ab208b-0748-43c9-90dd-df55ad511b22">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0bc4c68f-708d-43b8-b54c-55b5e18b037a"/>
+                </reportElement>
+                <textElement textAlignment="Left">
+                    <font size="12"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{bidderName}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="253" y="0" width="130" height="20" uuid="92410fba-5391-4132-8b2c-c7fce839716d">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="624f46c1-32ad-4e7e-bd0a-97ddc9ad5685"/>
+                </reportElement>
+                <textElement textAlignment="Left">
+                    <font size="12"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{bidderEmail}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="383" y="0" width="130" height="20" uuid="6028d8cb-6944-4930-9ec2-d8c4faa43675">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f2a75920-fd82-4148-b233-5bd24f2ad9fc"/>
+                </reportElement>
+                <textElement textAlignment="Left">
+                    <font size="12"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{bidAmount}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    <columnFooter>
+        <band/>
+    </columnFooter>
+    <pageFooter>
+        <band height="22">
+            <textField>
+                <reportElement mode="Opaque" x="0" y="4" width="515" height="13" backcolor="#E6E6E6" uuid="c2506268-b0b0-4fb2-9ad0-c0c3ed397b18"/>
+                <textElement textAlignment="Right"/>
+                <textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+            </textField>
+            <textField evaluationTime="Report">
+                <reportElement mode="Opaque" x="515" y="4" width="40" height="13" backcolor="#E6E6E6" uuid="346184e7-74f4-4054-85b7-d432ecdb7220"/>
+                <textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+            <textField pattern="EEEEE dd MMMMM yyyy">
+                <reportElement x="0" y="4" width="100" height="13" uuid="2c5b30a3-ca20-49c5-b735-c9f059261a71"/>
+                <textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+    <summary>
+        <band/>
+    </summary>
+</jasperReport>

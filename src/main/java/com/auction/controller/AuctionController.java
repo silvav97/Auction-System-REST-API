@@ -4,6 +4,7 @@ import com.auction.common.ApiResponse;
 import com.auction.dto.*;
 import com.auction.service.AuctionService;
 import com.auction.util.AppConstants;
+import net.sf.jasperreports.engine.JRException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 @RestController
@@ -47,6 +49,27 @@ public class AuctionController {
                                                                               HttpServletRequest request) {
         return auctionService.getAllAuctionsWithPaginationAndSorting(pageNumber, pageSize, sortBy, sortDireccion, request);
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/export/{format}")
+    public String getAllAuctionsPDFReport(@PathVariable("format") String format, HttpServletRequest request) throws JRException, FileNotFoundException {
+        return auctionService.exportAuctionsReport(format, request);
+    }
+
+    // Get Bids From My Auctions
+    @GetMapping("/{auctionId}/bids/export/{format}")
+    public String getAllBidsFromOneOfMyAuctionsPDFReport(@PathVariable("format") String format, @PathVariable("auctionId") Long auctionId, HttpServletRequest request) throws JRException, FileNotFoundException {
+        return auctionService.exportBidsReport(format, auctionId, request);
+    }
+
+
+
+
+
+
+
+
+
 
     // Get All The Auctions By User
     @PreAuthorize("hasRole('ADMIN')")
@@ -114,6 +137,10 @@ public class AuctionController {
                                                                                          @PathVariable("auctionId") Long auctionId, HttpServletRequest request) {
         return auctionService.getAllBidsFromAuctionWithPaginationAndSorting(pageNumber, pageSize, sortBy, sortDireccion, auctionId, request);
     }
+
+
+
+
 
 
 

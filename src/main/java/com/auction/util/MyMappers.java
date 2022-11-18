@@ -1,9 +1,6 @@
 package com.auction.util;
 
-import com.auction.dto.AuctionResponseDTO;
-import com.auction.dto.BidResponseDTO;
-import com.auction.dto.PaginatedAuctionResponseDTO;
-import com.auction.dto.PaginatedBidResponseDTO;
+import com.auction.dto.*;
 import com.auction.entity.Auction;
 import com.auction.entity.Bid;
 import org.springframework.data.domain.Page;
@@ -38,6 +35,27 @@ public class MyMappers {
         auctionResponseDTO.setAuctioneer(auction.getUser().getName());
         return auctionResponseDTO;
     }
+
+    public static PDFBidResponseDTO mapFromBidToPDFBidResponseDTO(Bid bid) {
+        PDFBidResponseDTO pdfBidResponseDTO = new PDFBidResponseDTO();
+        pdfBidResponseDTO.setId(bid.getId());
+        pdfBidResponseDTO.setBidderName(bid.getUser().getName());
+        pdfBidResponseDTO.setBidderEmail(bid.getUser().getEmail());
+        pdfBidResponseDTO.setBidAmount(bid.getBidAmount());
+        return pdfBidResponseDTO;
+    }
+
+    public static PDFAuctionResponseDTO mapFromAuctionToPDFAuctionResponseDTO(Auction auction) {
+        PDFAuctionResponseDTO pdfAuctionResponseDTO = new PDFAuctionResponseDTO();
+        pdfAuctionResponseDTO.setId(auction.getId());
+        pdfAuctionResponseDTO.setProduct(auction.getProduct());
+        pdfAuctionResponseDTO.setAuctioneerName(auction.getUser().getName());
+        pdfAuctionResponseDTO.setAuctioneerEmail(auction.getUser().getEmail());
+        pdfAuctionResponseDTO.setInitialValue(auction.getInitialValue());
+        pdfAuctionResponseDTO.setActive(auction.isActive());
+        return pdfAuctionResponseDTO;
+    }
+
 
     // Map From Page<Auction> To PaginatedAuctionResponseDTO
     public static PaginatedAuctionResponseDTO returnPaginatedAuctionResponseDTO(Page<Auction> auctions) {
