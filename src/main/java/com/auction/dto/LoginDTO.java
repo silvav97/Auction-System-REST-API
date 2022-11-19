@@ -1,8 +1,13 @@
 package com.auction.dto;
 
+import javax.validation.constraints.NotBlank;
+
 public class LoginDTO {
 
+	@NotBlank(message = "UsernameOrEmail field may not be blank or null")
 	private String usernameOrEmail;
+
+	@NotBlank(message = "Password may not be blank or null")
 	private String password;
 
 	public String getUsernameOrEmail() {

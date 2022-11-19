@@ -8,11 +8,13 @@ import java.util.List;
 
 public interface AuctionService {
 
-    // Any Authenticated User
+    // Only Users
     Auction createAuction(AuctionDTO auctionDTO, HttpServletRequest request);
     WinnerBid endAuction(Long auctionId, HttpServletRequest request);
+    List<AuctionResponseDTO> getAllMyAuctions(HttpServletRequest request);
+    PaginatedAuctionResponseDTO getAllMyAuctionsWithPaginationAndSorting(Integer pageNumber, Integer pageSize, String sortBy, String sortDireccion, HttpServletRequest request);
 
-    // Only Admin
+    // Only Admins
     List<AuctionResponseDTO> getAllAuctions(HttpServletRequest request);
     PaginatedAuctionResponseDTO getAllAuctionsWithPaginationAndSorting(Integer pageNumber, Integer pageSize, String sortBy, String sortDireccion, HttpServletRequest request);
     List<AuctionResponseDTO> getAllAuctionsByUser(Long userId, HttpServletRequest request);
@@ -21,13 +23,7 @@ public interface AuctionService {
     // Any Authenticated User
     List<AuctionResponseDTO> getAllActiveAuctions(HttpServletRequest request);
     PaginatedAuctionResponseDTO getAllActiveAuctionsWithPaginationAndSorting(Integer pageNumber, Integer pageSize, String sortBy, String sortDireccion, HttpServletRequest request);
-    List<AuctionResponseDTO> getAllMyAuctions(HttpServletRequest request);
-    PaginatedAuctionResponseDTO getAllMyAuctionsWithPaginationAndSorting(Integer pageNumber, Integer pageSize, String sortBy, String sortDireccion, HttpServletRequest request);
-
 
     // Only Admins or Auction's Owner
-    List<BidResponseDTO> getAllBidsFromAuction(Long auctionId, HttpServletRequest request);
-    PaginatedBidResponseDTO getAllBidsFromAuctionWithPaginationAndSorting(Integer pageNumber, Integer pageSize, String sortBy, String sortDireccion, Long auctionId, HttpServletRequest request);
-
-
+    AuctionResponseDTO getAuctionByAuctionId(Long auctionId, HttpServletRequest request);
 }

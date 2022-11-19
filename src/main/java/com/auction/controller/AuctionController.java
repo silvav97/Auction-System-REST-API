@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -20,18 +21,45 @@ public class AuctionController {
     @Autowired
     private AuctionService auctionService;
 
+    // Only Users
+    // Create Auction
+    @PreAuthorize("hasRole('USER')")
     @PostMapping
-    public ResponseEntity<ApiResponse> createAuction(@RequestBody AuctionDTO auctionDTO, HttpServletRequest request) {
+    public ResponseEntity<ApiResponse> createAuction(@Valid @RequestBody AuctionDTO auctionDTO, HttpServletRequest request) {
         auctionService.createAuction(auctionDTO, request);
         return new ResponseEntity<>(new ApiResponse(true, "Auction created successfully"), HttpStatus.CREATED);
     }
 
+    // Only Users
+    // End One Of My Auctions
+    @PreAuthorize("hasRole('USER')")
     @PutMapping("/{auctionId}")
     public ResponseEntity<ApiResponse> endAuction(@PathVariable("auctionId") Long auctionId, HttpServletRequest request) {
         auctionService.endAuction(auctionId, request);
         return new ResponseEntity<>(new ApiResponse(true, "Auction Ended successfully"), HttpStatus.OK);
     }
 
+    // Only Users
+    // Get All My Auctions
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/mine")
+    public List<AuctionResponseDTO> getAllMyAuctions(HttpServletRequest request) {
+        return auctionService.getAllMyAuctions(request);
+    }
+
+    // Only Users
+    // Get All My Auctions With Pagination And Sorting
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/paginationandsorting/mine")
+    public PaginatedAuctionResponseDTO getAllMyAuctionsWithPaginationAndSorting(@RequestParam(value = "pageNumber", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) Integer pageNumber,
+                                                                                @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) Integer pageSize,
+                                                                                @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+                                                                                @RequestParam(value = "sortDireccion", defaultValue = AppConstants.DEFAULT_SORT_DIRECCION, required = false) String sortDireccion,
+                                                                                HttpServletRequest request) {
+        return auctionService.getAllMyAuctionsWithPaginationAndSorting(pageNumber, pageSize, sortBy, sortDireccion, request);
+    }
+
+    // Only Admins
     // Get All The Auctions
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
@@ -39,6 +67,7 @@ public class AuctionController {
         return auctionService.getAllAuctions(request);
     }
 
+    // Only Admins
     // Get All The Auctions With Pagination And Sorting
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/paginationandsorting")
@@ -50,16 +79,18 @@ public class AuctionController {
         return auctionService.getAllAuctionsWithPaginationAndSorting(pageNumber, pageSize, sortBy, sortDireccion, request);
     }
 
+    // Only Admins
     // Get All The Auctions By UserId
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/{userId}")
+    @GetMapping("/userid/{userId}")
     public List<AuctionResponseDTO> getAllAuctionsByUser(@PathVariable("userId") Long userId, HttpServletRequest request) {
         return auctionService.getAllAuctionsByUser(userId, request);
     }
 
+    // Only Admins
     // Get All The Auctions By UserId With Pagination And Sorting
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/paginationandsorting/{userId}")
+    @GetMapping("/paginationandsorting/userid/{userId}")
     public PaginatedAuctionResponseDTO getAllAuctionsByUserWithPaginationAndSorting(@RequestParam(value = "pageNumber", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) Integer pageNumber,
                                                                                     @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) Integer pageSize,
                                                                                     @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
@@ -68,12 +99,14 @@ public class AuctionController {
         return auctionService.getAllAuctionsByUserWithPaginationAndSorting(pageNumber, pageSize, sortBy, sortDireccion, userId, request);
     }
 
+    // Any Authenticated User
     // Get All The Active Auctions
     @GetMapping("/active")
     public List<AuctionResponseDTO> getAllActiveAuctions(HttpServletRequest request) {
         return auctionService.getAllActiveAuctions(request);
     }
 
+    // Any Authenticated User
     // Get All The Active Auctions With Pagination And Sorting
     @GetMapping("/paginationandsorting/active")
     public PaginatedAuctionResponseDTO getAllActiveAuctionsWithPaginationAndSorting(@RequestParam(value = "pageNumber", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) Integer pageNumber,
@@ -84,38 +117,16 @@ public class AuctionController {
         return auctionService.getAllActiveAuctionsWithPaginationAndSorting(pageNumber, pageSize, sortBy, sortDireccion, request);
     }
 
-    // Get All My Auctions
-    @GetMapping("/mine")
-    public List<AuctionResponseDTO> getAllMyAuctions(HttpServletRequest request) {
-        return auctionService.getAllMyAuctions(request);
-    }
-
-    // Get All My Auctions With Pagination And Sorting
-    @GetMapping("/paginationandsorting/mine")
-    public PaginatedAuctionResponseDTO getAllMyAuctionsWithPaginationAndSorting(@RequestParam(value = "pageNumber", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) Integer pageNumber,
-                                                                                @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) Integer pageSize,
-                                                                                @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
-                                                                                @RequestParam(value = "sortDireccion", defaultValue = AppConstants.DEFAULT_SORT_DIRECCION, required = false) String sortDireccion,
-                                                                                HttpServletRequest request) {
-        return auctionService.getAllMyAuctionsWithPaginationAndSorting(pageNumber, pageSize, sortBy, sortDireccion, request);
+    // Only Admins or Auction's Owner
+    // Get Auction By AuctionId
+    @GetMapping("/{auctionId}")
+    public AuctionResponseDTO getAuctionByAuctionId(@PathVariable("auctionId") Long auctionId, HttpServletRequest request) {
+        return auctionService.getAuctionByAuctionId(auctionId, request);
     }
 
 
-    // Get Bids From One of My Auctions
-    @GetMapping("/{auctionId}/bids")
-    public List<BidResponseDTO> getAllBidsFromOneOfMyAuctions(@PathVariable("auctionId") Long auctionId, HttpServletRequest request) {
-        return auctionService.getAllBidsFromAuction(auctionId, request);
-    }
 
-    // Get Bids From One of My Auctions With Pagination And Sorting
-    @GetMapping("/paginationandsorting/{auctionId}/bids")
-    public PaginatedBidResponseDTO getAllBidsFromOneOfMyAuctionsWithPaginationAndSorting(@RequestParam(value = "pageNumber", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) Integer pageNumber,
-                                                                                         @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) Integer pageSize,
-                                                                                         @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
-                                                                                         @RequestParam(value = "sortDireccion", defaultValue = AppConstants.DEFAULT_SORT_DIRECCION, required = false) String sortDireccion,
-                                                                                         @PathVariable("auctionId") Long auctionId, HttpServletRequest request) {
-        return auctionService.getAllBidsFromAuctionWithPaginationAndSorting(pageNumber, pageSize, sortBy, sortDireccion, auctionId, request);
-    }
+
 
 
 

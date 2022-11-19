@@ -5,9 +5,11 @@ import java.util.Collections;
 import com.auction.common.ApiResponse;
 import com.auction.exception.EmailAlreadyExistException;
 import com.auction.exception.UsernameAlreadyExistException;
+import com.auction.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,6 +29,8 @@ import com.auction.repository.UserRepository;
 import com.auction.security.JwtAuthResponseDTO;
 import com.auction.security.JwtTokenProvider;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -35,54 +39,31 @@ public class AuthController {
 	private AuthenticationManager authenticationManager;
 	
 	@Autowired
-	private UserRepository userRepository;
-	
-	@Autowired
-	private RoleRepository roleRepository;
-	
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-	
+	private UserService userService;
+
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 	
 	@PostMapping("/login")
-	public ResponseEntity<JwtAuthResponseDTO> authenticateUser(@RequestBody LoginDTO loginDTO) {
+	public ResponseEntity<JwtAuthResponseDTO> authenticateUser(@Valid @RequestBody LoginDTO loginDTO) {
 		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsernameOrEmail(), loginDTO.getPassword()));
-		
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-		
 		// Get the token from jwtTokenProvider
 		String token = jwtTokenProvider.generateToken(authentication);
-		
 		return new ResponseEntity<>(new JwtAuthResponseDTO(token) ,HttpStatus.OK);
 	}
 	
 	@PostMapping("/signup")
-	public ResponseEntity<ApiResponse> signupUser(@RequestBody SignupDTO signupDTO) {
-		if(userRepository.existsByUsername(signupDTO.getUsername())) {
-			throw new UsernameAlreadyExistException(signupDTO.getUsername());
-		}
-		if(userRepository.existsByEmail(signupDTO.getEmail())) {
-			throw new EmailAlreadyExistException(signupDTO.getEmail());
-		}
-		User user = new User();
-		user.setAddress(signupDTO.getAddress());
-		user.setCellPhone(signupDTO.getCellPhone());
-		user.setCity(signupDTO.getCity());
-		user.setDocumentNumber(signupDTO.getDocumentNumber());
-		user.setEmail(signupDTO.getEmail());
-		user.setName(signupDTO.getName());
-		user.setPassword(passwordEncoder.encode(signupDTO.getPassword()));
-		user.setUsername(signupDTO.getUsername());
-		user.setCredit(0F);
-		
-		Role role = roleRepository.findByName("ROLE_USER").get();
-		user.setRoles(Collections.singleton(role));
-		
-		userRepository.save(user);
+	public ResponseEntity<ApiResponse> signupUser(@Valid @RequestBody SignupDTO signupDTO) {
+		userService.save(signupDTO);
 		return new ResponseEntity<>(new ApiResponse(true, "User registered successfully"), HttpStatus.CREATED);
 	}
-	
+
+	@PreAuthorize("hasRole('ADMIN')")
+	@PostMapping("/signupadmin")
+	public ResponseEntity<ApiResponse> signupAdmin(@Valid @RequestBody SignupDTO signupDTO) {
+		userService.saveAdmin(signupDTO);
+		return new ResponseEntity<>(new ApiResponse(true, "Admin registered successfully"), HttpStatus.CREATED);
+	}
 
 }

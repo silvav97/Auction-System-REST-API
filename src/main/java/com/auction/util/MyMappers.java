@@ -3,12 +3,18 @@ package com.auction.util;
 import com.auction.dto.*;
 import com.auction.entity.Auction;
 import com.auction.entity.Bid;
+import com.auction.entity.Role;
+import com.auction.entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class MyMappers {
+
 
 
     // Map From Bid To BidResponseDTO
@@ -85,6 +91,21 @@ public class MyMappers {
         response.setTotalPages(bids.getTotalPages());
         response.setLastPage(bids.isLast());
         return response;
+    }
+
+    // Map From SignDTO to User
+    public static User mapFromSignDTOToUser(SignupDTO signupDTO, Role role) {
+        User user = new User();
+        user.setAddress(signupDTO.getAddress());
+        user.setCellPhone(signupDTO.getCellPhone());
+        user.setCity(signupDTO.getCity());
+        user.setDocumentNumber(signupDTO.getDocumentNumber());
+        user.setEmail(signupDTO.getEmail());
+        user.setName(signupDTO.getName());
+        user.setUsername(signupDTO.getUsername());
+        user.setCredit(0F);
+        user.setRoles(Collections.singleton(role));
+        return user;
     }
 
 }

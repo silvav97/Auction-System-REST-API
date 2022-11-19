@@ -90,9 +90,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
 	}
 
+	@ExceptionHandler(FormatFileNotAvailableException.class)
+	public ResponseEntity<ErrorDetails> handleFormatFileNotAvailableException(FormatFileNotAvailableException exception, WebRequest webRequest) {
+		ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), webRequest.getDescription(false));
+		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+	}
 
-
-
+	@ExceptionHandler(BidDoesNotBelongToUserException.class)
+	public ResponseEntity<ErrorDetails> handleBidDoesNotBelongToUserException(BidDoesNotBelongToUserException exception, WebRequest webRequest) {
+		ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), webRequest.getDescription(false));
+		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+	}
 
 
 
