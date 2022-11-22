@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.auction.util.MyMappers.*;
@@ -61,7 +60,7 @@ public class AuctionServiceImpl implements AuctionService {
         User user = jwtAuthenticationFilter.getTheUserFromRequest(request);
         Auction auction = auctionRepository.findById(auctionId).orElseThrow(() -> new ResourceNotFoundException("Auction","AuctionId",String.valueOf(auctionId)));
         if(!auction.getUser().equals(user))   throw new AuctionDoesNotBelongToUserException();
-        if(auction.isActive() == false)   throw new AuctionAlreadyEndedException();
+        if(!auction.isActive())   throw new AuctionAlreadyEndedException();
 
         auction.setActive(false);
         auctionRepository.save(auction);
@@ -107,7 +106,7 @@ public class AuctionServiceImpl implements AuctionService {
     // Only Admins
     @Override
     public List<AuctionResponseDTO> getAllAuctions(HttpServletRequest request) {
-        jwtAuthenticationFilter.getTheUserFromRequest(request);
+        //jwtAuthenticationFilter.getTheUserFromRequest(request);
         List<Auction> auctions = auctionRepository.findAll();
         List<AuctionResponseDTO> listAuctions =  auctions.stream().map(auction -> mapFromAuctionToAuctionResponseDTO(auction)).collect(Collectors.toList());
         return listAuctions;
@@ -117,7 +116,7 @@ public class AuctionServiceImpl implements AuctionService {
     // Only Admins
     @Override
     public PaginatedAuctionResponseDTO getAllAuctionsWithPaginationAndSorting(Integer pageNumber, Integer pageSize, String sortBy, String sortDireccion, HttpServletRequest request) {
-        jwtAuthenticationFilter.getTheUserFromRequest(request);
+        //jwtAuthenticationFilter.getTheUserFromRequest(request);
         Sort sort = sortDireccion.equalsIgnoreCase(Sort.Direction.ASC.name())?Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         Page<Auction> auctions = auctionRepository.findAll(pageable);
@@ -127,7 +126,7 @@ public class AuctionServiceImpl implements AuctionService {
     // Only Admins
     @Override
     public List<AuctionResponseDTO> getAllAuctionsByUser(Long userId, HttpServletRequest request) {
-        jwtAuthenticationFilter.getTheUserFromRequest(request);
+        //jwtAuthenticationFilter.getTheUserFromRequest(request);
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User","UserId",String.valueOf(userId)));
         List<Auction> auctions = auctionRepository.findByUser(user);
         List<AuctionResponseDTO> listAuctions =  auctions.stream().map(auction -> mapFromAuctionToAuctionResponseDTO(auction)).collect(Collectors.toList());
@@ -137,7 +136,7 @@ public class AuctionServiceImpl implements AuctionService {
     // Only Admins
     @Override
     public PaginatedAuctionResponseDTO getAllAuctionsByUserWithPaginationAndSorting(Integer pageNumber, Integer pageSize, String sortBy, String sortDireccion, Long userId, HttpServletRequest request) {
-        jwtAuthenticationFilter.getTheUserFromRequest(request);
+        //jwtAuthenticationFilter.getTheUserFromRequest(request);
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User","UserId",String.valueOf(userId)));
         Sort sort = sortDireccion.equalsIgnoreCase(Sort.Direction.ASC.name())?Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
@@ -148,7 +147,7 @@ public class AuctionServiceImpl implements AuctionService {
     // Any Authenticated User
     @Override
     public List<AuctionResponseDTO> getAllActiveAuctions(HttpServletRequest request) {
-        jwtAuthenticationFilter.getTheUserFromRequest(request);
+        //jwtAuthenticationFilter.getTheUserFromRequest(request);
         List<Auction> auctions = auctionRepository.findByActiveTrue();
         List<AuctionResponseDTO> listAuctions =  auctions.stream().map(auction -> mapFromAuctionToAuctionResponseDTO(auction)).collect(Collectors.toList());
         return listAuctions;
@@ -157,7 +156,7 @@ public class AuctionServiceImpl implements AuctionService {
     // Any Authenticated User
     @Override
     public PaginatedAuctionResponseDTO getAllActiveAuctionsWithPaginationAndSorting(Integer pageNumber, Integer pageSize, String sortBy, String sortDireccion, HttpServletRequest request) {
-        jwtAuthenticationFilter.getTheUserFromRequest(request);
+        //jwtAuthenticationFilter.getTheUserFromRequest(request);
         Sort sort = sortDireccion.equalsIgnoreCase(Sort.Direction.ASC.name())?Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         Page<Auction> auctions = auctionRepository.findAllByActiveTrue(pageable);

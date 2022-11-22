@@ -48,7 +48,7 @@ public class BidServiceImpl implements BidService {
     // Only Admins
     @Override
     public List<BidResponseDTO> getAllBids(HttpServletRequest request) {
-        jwtAuthenticationFilter.getTheUserFromRequest(request);
+        //jwtAuthenticationFilter.getTheUserFromRequest(request);
         List<Bid> bids = bidRepository.findAll();
         List<BidResponseDTO> listBids =  bids.stream().map(bid -> mapFromBidToBidResponseDTO(bid)).collect(Collectors.toList());
         return listBids;
@@ -57,7 +57,7 @@ public class BidServiceImpl implements BidService {
     // Only Admins
     @Override
     public PaginatedBidResponseDTO getAllBidsWithPaginationAndSorting(Integer pageNumber, Integer pageSize, String sortBy, String sortDireccion, HttpServletRequest request) {
-        jwtAuthenticationFilter.getTheUserFromRequest(request);
+        //jwtAuthenticationFilter.getTheUserFromRequest(request);
         Sort sort = sortDireccion.equalsIgnoreCase(Sort.Direction.ASC.name())?Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         Page<Bid> bids = bidRepository.findAll(pageable);
@@ -67,7 +67,7 @@ public class BidServiceImpl implements BidService {
     // Only Admins
     @Override
     public List<BidResponseDTO> getAllBidsByUser(Long userId, HttpServletRequest request) {
-        jwtAuthenticationFilter.getTheUserFromRequest(request);
+        //jwtAuthenticationFilter.getTheUserFromRequest(request);
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User","UserId",String.valueOf(userId)));
         List<Bid> bids = bidRepository.findByUser(user);
         List<BidResponseDTO> listBids =  bids.stream().map(bid -> mapFromBidToBidResponseDTO(bid)).collect(Collectors.toList());
@@ -77,7 +77,7 @@ public class BidServiceImpl implements BidService {
     // Only Admins
     @Override
     public PaginatedBidResponseDTO getAllBidsByUserWithPaginationAndSorting(Integer pageNumber, Integer pageSize, String sortBy, String sortDireccion, Long userId, HttpServletRequest request) {
-        jwtAuthenticationFilter.getTheUserFromRequest(request);
+        //jwtAuthenticationFilter.getTheUserFromRequest(request);
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User","UserId",String.valueOf(userId)));
         Sort sort = sortDireccion.equalsIgnoreCase(Sort.Direction.ASC.name())?Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);

@@ -20,6 +20,12 @@ public class AuctionDTO {
     public AuctionDTO() {
     }
 
+    public AuctionDTO(String product, String description, Float initialValue) {
+        this.product = product;
+        this.description = description;
+        this.initialValue = initialValue;
+    }
+
     public String getProduct() {
         return product;
     }
