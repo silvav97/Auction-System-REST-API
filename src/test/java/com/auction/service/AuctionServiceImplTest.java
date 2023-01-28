@@ -6,6 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.when;
 
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+
 import com.auction.dto.AuctionDTO;
 import com.auction.dto.AuctionResponseDTO;
 import com.auction.dto.PaginatedAuctionResponseDTO;
@@ -39,9 +42,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
 
 
 @ExtendWith(MockitoExtension.class)

@@ -68,7 +68,8 @@ public class BidServiceImpl implements BidService {
     @Override
     public List<BidResponseDTO> getAllBidsByUser(Long userId, HttpServletRequest request) {
         //jwtAuthenticationFilter.getTheUserFromRequest(request);
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User","UserId",String.valueOf(userId)));
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException("User","UserId",String.valueOf(userId)));
         List<Bid> bids = bidRepository.findByUser(user);
         List<BidResponseDTO> listBids =  bids.stream().map(bid -> mapFromBidToBidResponseDTO(bid)).collect(Collectors.toList());
         return listBids;

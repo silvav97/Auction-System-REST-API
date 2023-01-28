@@ -33,9 +33,6 @@ public class AuctionServiceImpl implements AuctionService {
     private UserRepository userRepository;
 
     @Autowired
-    private BidRepository bidRepository;
-
-    @Autowired
     private RoleRepository roleRepository;
 
     @Autowired
